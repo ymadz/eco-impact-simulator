@@ -44,7 +44,7 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 1.25rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -117,7 +117,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 text-foreground min-h-screen;
+    @apply bg-gradient-to-br from-gray-50 via-emerald-50/30 to-teal-50/40 text-foreground min-h-screen;
   }
 }
 
@@ -127,10 +127,22 @@
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent;
   }
 
   .stat-card {
-    @apply bg-gradient-to-br from-white to-slate-50 border border-slate-200 shadow-lg rounded-2xl p-6 hover:shadow-xl transition-all duration-300;
+    @apply bg-white border-0 shadow-sm rounded-3xl p-6 hover:shadow-md transition-all duration-300;
+  }
+
+  .card-rounded {
+    @apply rounded-3xl;
+  }
+
+  .mint-gradient {
+    @apply bg-gradient-to-br from-emerald-400 to-teal-500;
+  }
+
+  .soft-shadow {
+    @apply shadow-sm hover:shadow-md transition-shadow duration-300;
   }
 }

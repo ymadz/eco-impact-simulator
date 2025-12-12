@@ -6,6 +6,7 @@ import { InputPanel } from '@/components/InputPanel';
 import { EcoScore } from '@/components/EcoScore';
 import { PieChartComponent } from '@/components/Charts/PieChartComponent';
 import { QuickStats } from '@/components/QuickStats';
+import { WhatIfSimulator } from '@/components/WhatIfSimulator';
 import { ResourceData } from '@/types';
 import { DEFAULT_RESOURCES } from '@/lib/constants';
 import { calculateEcoScore, calculateResourcePercentages } from '@/lib/calculations';
@@ -34,7 +35,7 @@ export default function Home() {
         <QuickStats carbonFootprint={ecoScore.carbonFootprint} score={ecoScore.score} />
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {/* Left Column - Input Panel */}
           <div className="lg:col-span-1">
             <InputPanel data={resourceData} onChange={setResourceData} />
@@ -48,6 +49,11 @@ export default function Home() {
             {/* Resource Distribution */}
             <PieChartComponent percentages={percentages} />
           </div>
+        </div>
+
+        {/* What-If Simulator - Full Width */}
+        <div className="mb-6">
+          <WhatIfSimulator currentData={resourceData} onApply={setResourceData} />
         </div>
 
         {/* Footer */}
