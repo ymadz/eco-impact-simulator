@@ -3,17 +3,17 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { ResourcePercentages } from '@/types';
-import { Zap, Droplet, FileText, Trash2 } from 'lucide-react';
+import { Zap, Droplet, FileText, Trash2, MoreVertical } from 'lucide-react';
 
 interface PieChartComponentProps {
   percentages: ResourcePercentages;
 }
 
 const COLORS = {
-  electricity: '#eab308', // yellow
+  electricity: '#f59e0b', // amber/orange
   water: '#3b82f6',      // blue
-  paper: '#f97316',      // orange
-  waste: '#ef4444',      // red
+  paper: '#a855f7',      // purple
+  waste: '#ef4444',      // red/pink
 };
 
 const ICONS = {
@@ -24,44 +24,37 @@ const ICONS = {
 };
 
 export function PieChartComponent({ percentages }: PieChartComponentProps) {
-  // Transform percentages into chart data
   const data = [
     {
       name: 'Electricity',
       value: percentages.electricity,
       color: COLORS.electricity,
-      icon: 'Zap',
+      percentage: `${percentages.electricity.toFixed(0)}%`,
     },
     {
       name: 'Water',
       value: percentages.water,
       color: COLORS.water,
-      icon: 'Droplet',
+      percentage: `${percentages.water.toFixed(0)}%`,
     },
     {
       name: 'Paper',
       value: percentages.paper,
       color: COLORS.paper,
-      icon: 'FileText',
+      percentage: `${percentages.paper.toFixed(0)}%`,
     },
     {
       name: 'Waste',
       value: percentages.waste,
       color: COLORS.waste,
-      icon: 'Trash2',
+      percentage: `${percentages.waste.toFixed(0)}%`,
     },
   ];
 
-  // Custom label renderer
-  const renderLabel = (entry: any) => {
-    return `${entry.value.toFixed(1)}%`;
-  };
-
-  // Custom tooltip
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
+        <div className="bg-white border border-gray-200 rounded-lg shadow-xl p-3">
           <p className="font-semibold text-gray-900">{payload[0].name}</p>
           <p className="text-sm text-gray-600">
             {payload[0].value.toFixed(1)}% of total impact
@@ -73,24 +66,30 @@ export function PieChartComponent({ percentages }: PieChartComponentProps) {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Resource Distribution</CardTitle>
-        <CardDescription>
-          Breakdown of your environmental impact by resource type
-        </CardDescription>
+    <Card className="bg-white border-0 shadow-xl">
+      <CardHeader className="border-b border-slate-100">
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-xl mb-1">Resource Distribution</CardTitle>
+            <CardDescription>
+              Breakdown of your environmental impact
+            </CardDescription>
+          </div>
+          <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+            <MoreVertical className="w-5 h-5 text-gray-400" />
+          </button>
+        </div>
       </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+      <CardContent className="pt-6">
+        <ResponsiveContainer width="100%" height={280}>
           <PieChart>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              labelLine={false}
-              label={renderLabel}
+              innerRadius={60}
               outerRadius={100}
-              fill="#8884d8"
+              paddingAngle={2}
               dataKey="value"
             >
               {data.map((entry, index) => (
@@ -98,28 +97,28 @@ export function PieChartComponent({ percentages }: PieChartComponentProps) {
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
-            <Legend
-              verticalAlign="bottom"
-              height={36}
-              iconType="circle"
-            />
           </PieChart>
         </ResponsiveContainer>
 
-        {/* Legend with Icons */}
+        {/* Legend with Percentages */}
         <div className="grid grid-cols-2 gap-3 mt-6">
           {data.map((item) => {
             const Icon = ICONS[item.name.toLowerCase() as keyof typeof ICONS];
             return (
               <div
                 key={item.name}
-                className="flex items-center gap-2 p-2 rounded-lg bg-gray-50"
+                className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors"
               >
-                <Icon className="w-5 h-5" style={{ color: item.color }} />
-                <div className="flex-1">
-                  <div className="text-sm font-medium">{item.name}</div>
+                <div
+                  className="w-3 h-3 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: item.color }}
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-gray-700 truncate">
+                    {item.name}
+                  </div>
                   <div className="text-xs text-gray-500">
-                    {item.value.toFixed(1)}%
+                    {item.percentage}
                   </div>
                 </div>
               </div>

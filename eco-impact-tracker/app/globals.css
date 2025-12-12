@@ -117,6 +117,20 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 text-foreground min-h-screen;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-xl;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent;
+  }
+
+  .stat-card {
+    @apply bg-gradient-to-br from-white to-slate-50 border border-slate-200 shadow-lg rounded-2xl p-6 hover:shadow-xl transition-all duration-300;
   }
 }
