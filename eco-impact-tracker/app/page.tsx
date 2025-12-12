@@ -3,13 +3,16 @@
 import { useState } from 'react';
 import { Header } from '@/components/Header';
 import { InputPanel } from '@/components/InputPanel';
+import { EcoScore } from '@/components/EcoScore';
+import { PieChartComponent } from '@/components/Charts/PieChartComponent';
 import { ResourceData } from '@/types';
 import { DEFAULT_RESOURCES } from '@/lib/constants';
-import { calculateEcoScore } from '@/lib/calculations';
+import { calculateEcoScore, calculateResourcePercentages } from '@/lib/calculations';
 
 export default function Home() {
   const [resourceData, setResourceData] = useState<ResourceData>(DEFAULT_RESOURCES);
   const ecoScore = calculateEcoScore(resourceData);
+  const percentages = calculateResourcePercentages(resourceData);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -23,31 +26,24 @@ export default function Home() {
           </div>
 
           {/* Main Content Area */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg border p-8">
-              <h2 className="text-2xl font-bold mb-4">Your Eco-Score</h2>
+          <div className="lg:col-span-2 space-y-6">
+            {/* Eco-Score Display */}
+            <EcoScore score={ecoScore} />
 
-              {/* Temporary score display - will be replaced with EcoScore component */}
-              <div className="text-center py-12">
-                <div
-                  className="text-8xl font-bold mb-4"
-                  style={{ color: ecoScore.color }}
-                >
-                  {ecoScore.score}
-                </div>
-                <div className="text-3xl font-semibold mb-2">
-                  Grade: {ecoScore.grade}
-                </div>
-                <div className="text-lg text-gray-600">
-                  Carbon Footprint: {ecoScore.carbonFootprint} kg CO₂/day
-                </div>
-              </div>
+            {/* Resource Distribution Pie Chart */}
+            <PieChartComponent percentages={percentages} />
 
-              <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-900">
-                  <strong>Next steps:</strong> We&apos;ll add beautiful charts, detailed statistics, and personalized recommendations in the upcoming phases.
-                </p>
-              </div>
+            {/* Coming Soon Section */}
+            <div className="bg-white rounded-lg border p-6">
+              <h3 className="text-lg font-semibold mb-3">Coming Soon</h3>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li>📊 Monthly projections bar chart</li>
+                <li>📈 Historical trends line chart</li>
+                <li>🔄 What-If scenario simulator</li>
+                <li>📚 Subject-specific sections (Statistics, Chemistry, Calculus, DRRR)</li>
+                <li>💡 Personalized recommendations</li>
+                <li>💾 Progress tracking and history</li>
+              </ul>
             </div>
           </div>
         </div>
