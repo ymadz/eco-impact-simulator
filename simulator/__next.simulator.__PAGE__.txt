@@ -1,9 +1,9 @@
 1:"$Sreact.fragment"
-2:I[43077,["/_next/static/chunks/6e032e0603c7734a.js","/_next/static/chunks/b6dc6e4b833f1b1b.js"],"ClientPageRoot"]
-3:I[51148,["/_next/static/chunks/01468805a782edeb.js","/_next/static/chunks/f0d88978a210229c.js","/_next/static/chunks/871037d2c64c29ed.js"],"default"]
-6:I[56622,["/_next/static/chunks/6e032e0603c7734a.js","/_next/static/chunks/b6dc6e4b833f1b1b.js"],"OutletBoundary"]
+2:I[43077,["/eco-impact-simulator/_next/static/chunks/6e032e0603c7734a.js","/eco-impact-simulator/_next/static/chunks/b6dc6e4b833f1b1b.js"],"ClientPageRoot"]
+3:I[51148,["/eco-impact-simulator/_next/static/chunks/01468805a782edeb.js","/eco-impact-simulator/_next/static/chunks/f0d88978a210229c.js","/eco-impact-simulator/_next/static/chunks/871037d2c64c29ed.js"],"default"]
+6:I[56622,["/eco-impact-simulator/_next/static/chunks/6e032e0603c7734a.js","/eco-impact-simulator/_next/static/chunks/b6dc6e4b833f1b1b.js"],"OutletBoundary"]
 7:"$Sreact.suspense"
-0:{"buildId":"IVLTqyOPXNpY5ovRWs6i9","rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/_next/static/chunks/f0d88978a210229c.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/871037d2c64c29ed.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"loading":null,"isPartial":false}
+0:{"buildId":"2kgOR8KNqrlZmsSbJEtQs","rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/eco-impact-simulator/_next/static/chunks/f0d88978a210229c.js","async":true}],["$","script","script-1",{"src":"/eco-impact-simulator/_next/static/chunks/871037d2c64c29ed.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"loading":null,"isPartial":false}
 4:{}
 5:"$0:rsc:props:children:0:props:serverProvidedParams:params"
 8:null
