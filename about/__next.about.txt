@@ -1,4 +1,4 @@
 1:"$Sreact.fragment"
 2:I[19027,["/eco-impact-simulator/_next/static/chunks/6e032e0603c7734a.js","/eco-impact-simulator/_next/static/chunks/b6dc6e4b833f1b1b.js"],"default"]
 3:I[68239,["/eco-impact-simulator/_next/static/chunks/6e032e0603c7734a.js","/eco-impact-simulator/_next/static/chunks/b6dc6e4b833f1b1b.js"],"default"]
-0:{"buildId":"gVyHn2wyzZoKJgqHd-4vQ","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"loading":null,"isPartial":false}
+0:{"buildId":"91U4K2AMZeLw4zxr9sHFr","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"loading":null,"isPartial":false}
