@@ -48,34 +48,23 @@ export default function SimulatorPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Breadcrumb */}
-      <div className="border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 py-3">
-          <nav className="flex items-center gap-2 text-sm text-gray-600">
-            <a href="/" className="hover:text-green-600">Home</a>
-            <span>/</span>
-            <span className="text-gray-900">Calculator</span>
-          </nav>
-        </div>
-      </div>
-
-      {/* Header */}
-      <div className="border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Leaf className="w-8 h-8 text-green-600" />
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Eco-Impact Calculator
-            </h1>
+    <main className="min-h-screen bg-white pt-24">
+      {/* Header - Chemistry style */}
+      <div className="text-center mb-10">
+        <div className="flex justify-center mb-4">
+          <div className="bg-green-100 p-4 rounded-full">
+            <Leaf className="h-12 w-12 text-green-600" />
           </div>
-          <p className="text-gray-600">
-            Calculate your environmental footprint by entering your daily resource consumption
-          </p>
         </div>
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          <span role="img" aria-label="calculator">🧮</span> Eco-Impact Calculator
+        </h1>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Calculate your environmental footprint by entering your daily resource consumption
+        </p>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 pb-8">
         {/* Tabs */}
         <div className="flex border-b border-gray-200 mb-8">
           {tabs.map((tab) => (

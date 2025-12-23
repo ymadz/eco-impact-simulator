@@ -2,23 +2,23 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Leaf, Calculator, FlaskConical, ShieldAlert } from 'lucide-react';
+import { ArrowRight, Leaf, Calculator, FlaskConical, ShieldAlert, TrendingUp } from 'lucide-react';
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative">
-        {/* Hero Image */}
+        {/* Hero Image - Nature focused */}
         <div className="relative h-[400px] md:h-[500px] w-full">
           <Image
-            src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1920&q=80"
-            alt="Wind turbines in green field"
+            src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80"
+            alt="Sunlight through green forest trees"
             fill
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60" />
           
           {/* Hero Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4">
@@ -44,85 +44,94 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 px-4 max-w-6xl mx-auto">
-        <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-4">
-          Integrated Learning Modules
-        </h2>
-        <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-          Our simulator integrates multiple subjects to help you understand environmental science from different perspectives
-        </p>
+      <section className="py-20 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-green-600 font-medium text-sm uppercase tracking-wide">Explore</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">
+              Integrated Learning Modules
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Our simulator integrates multiple subjects to help you understand environmental science from different perspectives
+            </p>
+          </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Resource Simulator */}
-          <Link href="/simulator" className="group">
-            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-green-500 transition-all h-full">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-green-500 transition-colors">
-                <Calculator className="w-6 h-6 text-green-600 group-hover:text-white transition-colors" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Resource Simulator */}
+            <Link href="/simulator" className="group">
+              <div className="bg-gray-50 border border-gray-100 rounded-xl p-6 hover:shadow-lg hover:border-green-300 hover:bg-white transition-all h-full">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-green-500 transition-colors">
+                  <Calculator className="w-6 h-6 text-green-600 group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Resource Simulator</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Calculate your carbon footprint from daily resource consumption
+                </p>
+                <span className="text-xs text-green-600 font-medium">E-Tech Integration →</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Resource Simulator</h3>
-              <p className="text-sm text-gray-600">
-                Calculate your carbon footprint from daily resource consumption
-              </p>
-              <span className="text-xs text-green-600 font-medium mt-3 block">E-Tech Integration</span>
-            </div>
-          </Link>
+            </Link>
 
-          {/* Chemistry Lab */}
-          <Link href="/chemistry" className="group">
-            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-purple-500 transition-all h-full">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-500 transition-colors">
-                <FlaskConical className="w-6 h-6 text-purple-600 group-hover:text-white transition-colors" />
+            {/* Chemistry Lab */}
+            <Link href="/chemistry" className="group">
+              <div className="bg-gray-50 border border-gray-100 rounded-xl p-6 hover:shadow-lg hover:border-purple-300 hover:bg-white transition-all h-full">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-500 transition-colors">
+                  <FlaskConical className="w-6 h-6 text-purple-600 group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Pollution Lab</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Visualize pollutant concentration and dilution calculations
+                </p>
+                <span className="text-xs text-purple-600 font-medium">Chemistry Integration →</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Pollution Lab</h3>
-              <p className="text-sm text-gray-600">
-                Visualize pollutant concentration and dilution calculations
-              </p>
-              <span className="text-xs text-purple-600 font-medium mt-3 block">Chemistry Integration</span>
-            </div>
-          </Link>
+            </Link>
 
-          {/* Limit Projector */}
-          <Link href="/simulator" className="group">
-            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-blue-500 transition-all h-full">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-                <svg className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
+            {/* Limit Projector */}
+            <Link href="/simulator" className="group">
+              <div className="bg-gray-50 border border-gray-100 rounded-xl p-6 hover:shadow-lg hover:border-blue-300 hover:bg-white transition-all h-full">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
+                  <TrendingUp className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Limit Projector</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  See long-term environmental impact projections using calculus
+                </p>
+                <span className="text-xs text-blue-600 font-medium">Calculus Integration →</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Limit Projector</h3>
-              <p className="text-sm text-gray-600">
-                See long-term environmental impact projections using calculus
-              </p>
-              <span className="text-xs text-blue-600 font-medium mt-3 block">Calculus Integration</span>
-            </div>
-          </Link>
+            </Link>
 
-          {/* Safety Center */}
-          <Link href="/drrr" className="group">
-            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-orange-500 transition-all h-full">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-orange-500 transition-colors">
-                <ShieldAlert className="w-6 h-6 text-orange-600 group-hover:text-white transition-colors" />
+            {/* Safety Center */}
+            <Link href="/drrr" className="group">
+              <div className="bg-gray-50 border border-gray-100 rounded-xl p-6 hover:shadow-lg hover:border-orange-300 hover:bg-white transition-all h-full">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-orange-500 transition-colors">
+                  <ShieldAlert className="w-6 h-6 text-orange-600 group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Safety Center</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Report hazards and learn disaster risk reduction protocols
+                </p>
+                <span className="text-xs text-orange-600 font-medium">DRRR Integration →</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Safety Center</h3>
-              <p className="text-sm text-gray-600">
-                Report hazards and learn disaster risk reduction protocols
-              </p>
-              <span className="text-xs text-orange-600 font-medium mt-3 block">DRRR Integration</span>
-            </div>
-          </Link>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-16 px-4 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-12">
-            How It Works
-          </h2>
+      {/* Divider */}
+      <div className="w-full h-px bg-gray-200"></div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+      {/* How It Works Section */}
+      <section className="py-20 px-4 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-green-600 font-medium text-sm uppercase tracking-wide">Process</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2">
+              How It Works
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="w-14 h-14 bg-green-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                 1
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Enter Your Data</h3>
@@ -132,7 +141,7 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="w-14 h-14 bg-green-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                 2
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Calculate Impact</h3>
@@ -142,7 +151,7 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="w-14 h-14 bg-green-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                 3
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Learn & Improve</h3>
@@ -155,9 +164,9 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-white border-t border-gray-200">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-4xl font-bold text-green-600 mb-2">85%</div>
               <p className="text-gray-600 text-sm">Students improved eco-awareness</p>
