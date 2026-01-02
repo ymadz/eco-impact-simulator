@@ -192,3 +192,96 @@ export const SURVEY_STATS = [
     action: 'Start recycling today',
   },
 ];
+
+// Fun facts for E-Tech integration
+export const FUN_FACTS = [
+  {
+    id: '1',
+    category: 'water',
+    icon: '💧',
+    fact: 'If everyone in the Philippines saved just 1 liter of water daily, we could save over 100 million liters every day!',
+    source: 'Environmental Conservation Studies',
+  },
+  {
+    id: '2',
+    category: 'energy',
+    icon: '💡',
+    fact: 'LED bulbs use 75% less energy than traditional incandescent bulbs and last 25 times longer!',
+    source: 'Energy Efficiency Report',
+  },
+  {
+    id: '3',
+    category: 'waste',
+    icon: '♻️',
+    fact: 'Recycling one aluminum can saves enough energy to power a TV for 3 hours!',
+    source: 'Recycling Association',
+  },
+  {
+    id: '4',
+    category: 'plastic',
+    icon: '🥤',
+    fact: 'A single plastic bottle takes approximately 450 years to decompose in the ocean!',
+    source: 'Marine Conservation Society',
+  },
+  {
+    id: '5',
+    category: 'paper',
+    icon: '🌳',
+    fact: 'Recycling 1 ton of paper saves 17 trees, 26,000 liters of water, and 3 cubic meters of landfill space!',
+    source: 'Forest Conservation Foundation',
+  },
+  {
+    id: '6',
+    category: 'food',
+    icon: '🍎',
+    fact: 'About 1/3 of all food produced globally is wasted. That\'s enough to feed 2 billion people!',
+    source: 'UN Food and Agriculture Organization',
+  },
+  {
+    id: '7',
+    category: 'carbon',
+    icon: '🌍',
+    fact: 'Planting just one tree can absorb up to 22 kg of CO₂ per year for 40 years!',
+    source: 'Climate Action Network',
+  },
+  {
+    id: '8',
+    category: 'electricity',
+    icon: '⚡',
+    fact: 'Leaving your charger plugged in when not in use still consumes electricity - up to 0.26 watts per hour!',
+    source: 'Energy Conservation Institute',
+  },
+];
+
+// Usage analogies for better understanding
+export const USAGE_ANALOGIES = {
+  water: [
+    { amount: 6, description: 'toilet flush', icon: '🚽' },
+    { amount: 10, description: 'brushing teeth (tap running)', icon: '🪥' },
+    { amount: 15, description: 'hand washing (1 min)', icon: '🧼' },
+    { amount: 40, description: 'washing dishes by hand', icon: '🍽️' },
+    { amount: 65, description: 'average shower (5 min)', icon: '🚿' },
+    { amount: 150, description: 'bathtub fill', icon: '🛁' },
+    { amount: 200, description: 'washing machine load', icon: '👕' },
+  ],
+  energy: [
+    { amount: 0.01, description: 'phone charging (1 hour)', icon: '📱' },
+    { amount: 0.06, description: 'LED bulb (1 hour)', icon: '💡' },
+    { amount: 0.1, description: 'laptop (1 hour)', icon: '💻' },
+    { amount: 0.15, description: 'desktop computer (1 hour)', icon: '🖥️' },
+    { amount: 0.5, description: 'ceiling fan (1 hour)', icon: '🌀' },
+    { amount: 1.0, description: 'electric fan (1 hour)', icon: '📺' },
+    { amount: 1.5, description: 'air conditioner (1 hour)', icon: '❄️' },
+    { amount: 2.0, description: 'electric iron (1 hour)', icon: '👔' },
+  ],
+};
+
+// Updated waste types based on survey data
+export const WASTE_TYPES = [
+  { id: 'paper', name: 'Paper & Cardboard', icon: '📄', percentage: 45, tip: 'Recycle or go digital!' },
+  { id: 'plastic', name: 'Plastic Bottles/Items', icon: '🥤', percentage: 70, tip: 'Use reusable bottles!' },
+  { id: 'food', name: 'Food Waste', icon: '🍔', percentage: 35, tip: 'Take only what you can eat!' },
+  { id: 'electronics', name: 'E-Waste (batteries, etc.)', icon: '🔋', percentage: 15, tip: 'Proper disposal required!' },
+  { id: 'organic', name: 'Organic/Compostable', icon: '🍂', percentage: 25, tip: 'Compost when possible!' },
+  { id: 'general', name: 'General/Mixed Waste', icon: '🗑️', percentage: 20, tip: 'Sort before throwing!' },
+];

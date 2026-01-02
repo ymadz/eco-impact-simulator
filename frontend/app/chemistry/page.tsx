@@ -1,18 +1,74 @@
 'use client';
 
 import { useState } from 'react';
-import { FlaskConical, Droplets, AlertTriangle } from 'lucide-react';
+import { FlaskConical, Droplets, AlertTriangle, Info, Calculator, ArrowRightLeft } from 'lucide-react';
 import PollutionTank from '@/components/PollutionTank';
 import { calculateConcentration, WATER_BODIES, POLLUTANTS } from '@/lib/calculations';
 
 export default function ChemistryPage() {
   const [pollutantType, setPollutantType] = useState('detergent');
   const [pollutantAmount, setPollutantAmount] = useState(50);
+  const [pollutantUnit, setPollutantUnit] = useState<'g' | 'kg' | 'mg'>('g');
   const [waterBody1, setWaterBody1] = useState('canal');
   const [waterBody2, setWaterBody2] = useState('river');
+  
+  // Unit Converter State
+  const [showConverter, setShowConverter] = useState(false);
+  const [converterValue, setConverterValue] = useState(1);
+  const [converterFrom, setConverterFrom] = useState('mL');
+  const [converterTo, setConverterTo] = useState('L');
 
-  const result1 = calculateConcentration(pollutantAmount, waterBody1, pollutantType);
-  const result2 = calculateConcentration(pollutantAmount, waterBody2, pollutantType);
+  // Convert pollutant amount to grams for calculations
+  const getAmountInGrams = () => {
+    switch (pollutantUnit) {
+      case 'kg': return pollutantAmount * 1000;
+      case 'mg': return pollutantAmount / 1000;
+      default: return pollutantAmount;
+    }
+  };
+
+  const amountInGrams = getAmountInGrams();
+  const result1 = calculateConcentration(amountInGrams, waterBody1, pollutantType);
+  const result2 = calculateConcentration(amountInGrams, waterBody2, pollutantType);
+
+  // Unit Conversion Logic
+  const conversionFactors: Record<string, Record<string, number>> = {
+    // Volume conversions (base: mL)
+    'mL': { 'mL': 1, 'L': 0.001, 'gal': 0.000264172 },
+    'L': { 'mL': 1000, 'L': 1, 'gal': 0.264172 },
+    'gal': { 'mL': 3785.41, 'L': 3.78541, 'gal': 1 },
+    // Mass conversions (base: g)
+    'mg': { 'mg': 1, 'g': 0.001, 'kg': 0.000001 },
+    'g': { 'mg': 1000, 'g': 1, 'kg': 0.001 },
+    'kg': { 'mg': 1000000, 'g': 1000, 'kg': 1 },
+    // Moles (assuming water, molar mass ~18 g/mol)
+    'mol': { 'g': 18, 'mol': 1 },
+  };
+
+  const getConvertedValue = () => {
+    // Handle volume conversions
+    if (['mL', 'L', 'gal'].includes(converterFrom) && ['mL', 'L', 'gal'].includes(converterTo)) {
+      return (converterValue * conversionFactors[converterFrom][converterTo]).toFixed(4);
+    }
+    // Handle mass conversions
+    if (['mg', 'g', 'kg'].includes(converterFrom) && ['mg', 'g', 'kg'].includes(converterTo)) {
+      return (converterValue * conversionFactors[converterFrom][converterTo]).toFixed(4);
+    }
+    // Handle g to mol and vice versa (assuming generic substance ~18 g/mol like water)
+    if (converterFrom === 'g' && converterTo === 'mol') {
+      return (converterValue / 18).toFixed(4);
+    }
+    if (converterFrom === 'mol' && converterTo === 'g') {
+      return (converterValue * 18).toFixed(4);
+    }
+    return converterValue.toFixed(4);
+  };
+
+  const swapUnits = () => {
+    const temp = converterFrom;
+    setConverterFrom(converterTo);
+    setConverterTo(temp);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-8">
@@ -31,6 +87,13 @@ export default function ChemistryPage() {
             Explore how the same amount of pollutant creates different concentrations 
             in different water bodies. Learn about dilution and its effects on toxicity!
           </p>
+          {/* Subject Integration Badge */}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium">
+              <Info className="w-4 h-4" />
+              <span>Chemistry Integration: Concentration & Dilution Formulas</span>
+            </div>
+          </div>
         </div>
 
         {/* Formula Explanation */}
@@ -49,6 +112,105 @@ export default function ChemistryPage() {
             on both the amount of pollutant AND the volume of water it enters. The same amount 
             of detergent in a small canal is much more dangerous than in a large river!
           </p>
+        </div>
+
+        {/* Unit Converter Toggle */}
+        <div className="max-w-3xl mx-auto mb-8">
+          <button
+            onClick={() => setShowConverter(!showConverter)}
+            className="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
+          >
+            <Calculator className="h-5 w-5" />
+            {showConverter ? 'Hide' : 'Show'} Unit Converter
+          </button>
+
+          {showConverter && (
+            <div className="mt-4 bg-white p-6 rounded-2xl shadow-lg">
+              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <ArrowRightLeft className="h-5 w-5 text-purple-500" />
+                Unit Converter
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Value</label>
+                  <input
+                    type="number"
+                    value={converterValue}
+                    onChange={(e) => setConverterValue(Number(e.target.value))}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                  />
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">From</label>
+                    <select
+                      value={converterFrom}
+                      onChange={(e) => setConverterFrom(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-white"
+                    >
+                      <optgroup label="Volume">
+                        <option value="mL">milliliters (mL)</option>
+                        <option value="L">liters (L)</option>
+                        <option value="gal">gallons (gal)</option>
+                      </optgroup>
+                      <optgroup label="Mass">
+                        <option value="mg">milligrams (mg)</option>
+                        <option value="g">grams (g)</option>
+                        <option value="kg">kilograms (kg)</option>
+                      </optgroup>
+                      <optgroup label="Amount">
+                        <option value="mol">moles (mol)</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  
+                  <button
+                    onClick={swapUnits}
+                    className="mt-6 p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                  >
+                    <ArrowRightLeft className="h-5 w-5 text-gray-600" />
+                  </button>
+                  
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">To</label>
+                    <select
+                      value={converterTo}
+                      onChange={(e) => setConverterTo(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-white"
+                    >
+                      <optgroup label="Volume">
+                        <option value="mL">milliliters (mL)</option>
+                        <option value="L">liters (L)</option>
+                        <option value="gal">gallons (gal)</option>
+                      </optgroup>
+                      <optgroup label="Mass">
+                        <option value="mg">milligrams (mg)</option>
+                        <option value="g">grams (g)</option>
+                        <option value="kg">kilograms (kg)</option>
+                      </optgroup>
+                      <optgroup label="Amount">
+                        <option value="mol">moles (mol)</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Result</label>
+                  <div className="px-4 py-3 bg-purple-50 border border-purple-200 rounded-lg text-purple-800 font-bold text-lg">
+                    {getConvertedValue()} {converterTo}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+                <strong>Note:</strong> Mole conversions assume water (H₂O) with molar mass ≈ 18 g/mol. 
+                For other substances, multiply by their specific molar mass.
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Controls */}
@@ -81,23 +243,35 @@ export default function ChemistryPage() {
               </div>
             </div>
 
-            {/* Amount Slider */}
+            {/* Amount Calculator Input */}
             <div>
               <label className="block font-semibold text-gray-700 mb-3">
-                Pollutant Amount: {pollutantAmount}g
+                Pollutant Amount
               </label>
-              <input
-                type="range"
-                min="10"
-                max="500"
-                step="10"
-                value={pollutantAmount}
-                onChange={(e) => setPollutantAmount(Number(e.target.value))}
-                className="w-full h-3 bg-blue-100 rounded-lg appearance-none cursor-pointer mb-4"
-              />
-              <div className="flex justify-between text-sm text-gray-500">
-                <span>10g</span>
-                <span>500g</span>
+              <div className="flex gap-2 mb-4">
+                <input
+                  type="number"
+                  value={pollutantAmount}
+                  onChange={(e) => setPollutantAmount(Number(e.target.value))}
+                  min="1"
+                  max="10000"
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                />
+                <select
+                  value={pollutantUnit}
+                  onChange={(e) => setPollutantUnit(e.target.value as 'g' | 'kg' | 'mg')}
+                  className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                >
+                  <option value="mg">mg</option>
+                  <option value="g">g</option>
+                  <option value="kg">kg</option>
+                </select>
+              </div>
+              <div className="text-sm text-gray-500">
+                Equivalent: <strong>{amountInGrams.toLocaleString()} grams</strong>
+              </div>
+              <div className="mt-2 p-3 bg-blue-50 rounded-lg text-sm text-blue-700">
+                💡 <strong>Quick Reference:</strong> A typical soap bar = ~100g, Detergent cap = ~30mL
               </div>
             </div>
           </div>
@@ -145,13 +319,13 @@ export default function ChemistryPage() {
             result={result1}
             waterBodyName={WATER_BODIES[waterBody1].name}
             pollutantName={POLLUTANTS[pollutantType].name}
-            amount={pollutantAmount}
+            amount={amountInGrams}
           />
           <PollutionTank
             result={result2}
             waterBodyName={WATER_BODIES[waterBody2].name}
             pollutantName={POLLUTANTS[pollutantType].name}
-            amount={pollutantAmount}
+            amount={amountInGrams}
           />
         </div>
 
@@ -162,7 +336,7 @@ export default function ChemistryPage() {
             <div>
               <h3 className="font-bold text-xl mb-3">Key Lesson</h3>
               <p className="text-blue-100 mb-4">
-                The same {pollutantAmount}g of {POLLUTANTS[pollutantType].name.toLowerCase()} creates:
+                The same {amountInGrams}g of {POLLUTANTS[pollutantType].name.toLowerCase()} creates:
               </p>
               <ul className="space-y-2">
                 <li>

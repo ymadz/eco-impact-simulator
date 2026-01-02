@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { RefreshCw, Zap, Droplets, Trash2, TrendingUp, Calculator, Leaf } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { RefreshCw, Zap, Droplets, Trash2, TrendingUp, Calculator, Leaf, Info, Lightbulb } from 'lucide-react';
 import LimitGraph from '@/components/LimitGraph';
 import { calculateEcoScore, calculateProjection } from '@/lib/calculations';
+import { FUN_FACTS, USAGE_ANALOGIES, WASTE_TYPES } from '@/lib/constants';
 
 type TabType = 'energy' | 'water' | 'waste';
 
@@ -12,12 +13,36 @@ export default function SimulatorPage() {
   const [electricity, setElectricity] = useState(5);
   const [water, setWater] = useState(20);
   const [waste, setWaste] = useState(2);
+  const [wasteType, setWasteType] = useState('paper');
   const [dailyIncrease, setDailyIncrease] = useState(0.5);
   const [showResults, setShowResults] = useState(false);
   const [showLimitGraph, setShowLimitGraph] = useState(false);
+  const [currentFunFact, setCurrentFunFact] = useState(FUN_FACTS[0]);
 
   const ecoResult = calculateEcoScore(electricity, water, waste);
   const projectionData = calculateProjection(dailyIncrease);
+
+  // Rotate fun facts
+  useEffect(() => {
+    if (showResults) {
+      const interval = setInterval(() => {
+        const randomFact = FUN_FACTS[Math.floor(Math.random() * FUN_FACTS.length)];
+        setCurrentFunFact(randomFact);
+      }, 8000);
+      return () => clearInterval(interval);
+    }
+  }, [showResults]);
+
+  // Get relevant analogies for current input
+  const getWaterAnalogy = () => {
+    const sorted = USAGE_ANALOGIES.water.sort((a, b) => Math.abs(a.amount - water) - Math.abs(b.amount - water));
+    return sorted[0];
+  };
+
+  const getEnergyAnalogy = () => {
+    const sorted = USAGE_ANALOGIES.energy.sort((a, b) => Math.abs(a.amount - electricity) - Math.abs(b.amount - electricity));
+    return sorted[0];
+  };
 
   const handleCalculate = () => {
     setShowResults(true);
@@ -27,6 +52,7 @@ export default function SimulatorPage() {
     setElectricity(5);
     setWater(20);
     setWaste(2);
+    setWasteType('paper');
     setShowResults(false);
     setShowLimitGraph(false);
   };
@@ -62,6 +88,17 @@ export default function SimulatorPage() {
         <p className="text-gray-600 max-w-2xl mx-auto">
           Calculate your environmental footprint by entering your daily resource consumption
         </p>
+        {/* Subject Integration Badge */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+          <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+            <Info className="w-4 h-4" />
+            <span>E-Tech: Data Interpretation & Surveys</span>
+          </div>
+          <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium">
+            <Info className="w-4 h-4" />
+            <span>Calculus: Limits & Projections</span>
+          </div>
+        </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 pb-8">
@@ -108,6 +145,25 @@ export default function SimulatorPage() {
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">Average: 5 kWh per day</p>
+                  
+                  {/* Energy Analogies */}
+                  <div className="mt-3 p-3 bg-yellow-50 rounded-lg">
+                    <p className="text-sm font-medium text-yellow-800 mb-2 flex items-center gap-2">
+                      <Lightbulb className="w-4 h-4" />
+                      Quick Reference:
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 text-xs text-yellow-700">
+                      {USAGE_ANALOGIES.energy.slice(0, 4).map((item, idx) => (
+                        <div key={idx} className="flex items-center gap-1">
+                          <span>{item.icon}</span>
+                          <span>{item.description}: {item.amount} kWh</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-yellow-600 mt-2 font-medium">
+                      ≈ {Math.round(electricity / (getEnergyAnalogy()?.amount || 1))} {getEnergyAnalogy()?.description}(s) worth
+                    </p>
+                  </div>
                 </div>
 
                 <div>
@@ -148,6 +204,25 @@ export default function SimulatorPage() {
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">Average: 20 liters per day</p>
+                  
+                  {/* Water Analogies */}
+                  <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm font-medium text-blue-800 mb-2 flex items-center gap-2">
+                      <Droplets className="w-4 h-4" />
+                      Quick Reference:
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 text-xs text-blue-700">
+                      {USAGE_ANALOGIES.water.slice(0, 4).map((item, idx) => (
+                        <div key={idx} className="flex items-center gap-1">
+                          <span>{item.icon}</span>
+                          <span>{item.description}: {item.amount}L</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-blue-600 mt-2 font-medium">
+                      ≈ {Math.round(water / (getWaterAnalogy()?.amount || 1))} {getWaterAnalogy()?.description}(s) worth
+                    </p>
+                  </div>
                 </div>
 
                 <div>
@@ -193,14 +268,42 @@ export default function SimulatorPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Waste Type
+                    Waste Type (from survey data)
                   </label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white">
-                    <option>Mixed Waste</option>
-                    <option>Recyclables</option>
-                    <option>Food Waste</option>
-                    <option>Paper & Cardboard</option>
+                  <select 
+                    value={wasteType}
+                    onChange={(e) => setWasteType(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white"
+                  >
+                    {WASTE_TYPES.map((type) => (
+                      <option key={type.id} value={type.id}>
+                        {type.icon} {type.name} ({type.percentage}% of students)
+                      </option>
+                    ))}
                   </select>
+                </div>
+              </div>
+
+              {/* Survey-based waste info */}
+              <div className="p-4 bg-green-50 rounded-xl">
+                <h4 className="text-sm font-semibold text-green-800 mb-3 flex items-center gap-2">
+                  <Info className="w-4 h-4" />
+                  Survey Insights: Waste Types at School
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {WASTE_TYPES.map((type) => (
+                    <div 
+                      key={type.id} 
+                      className={`p-3 rounded-lg text-sm ${wasteType === type.id ? 'bg-green-200' : 'bg-white'}`}
+                    >
+                      <div className="flex items-center gap-2 font-medium">
+                        <span className="text-lg">{type.icon}</span>
+                        <span className="text-gray-800">{type.percentage}%</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">{type.name}</p>
+                      <p className="text-xs text-green-600 mt-1">💡 {type.tip}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -343,6 +446,29 @@ export default function SimulatorPage() {
                   </li>
                 )}
               </ul>
+            </div>
+
+            {/* Fun Fact Section - E-Tech Integration */}
+            <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl p-6 text-white">
+              <div className="flex items-start gap-4">
+                <div className="bg-white/20 p-3 rounded-full">
+                  <Lightbulb className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-semibold text-lg">Did You Know?</h3>
+                    <span className="text-xs bg-white/20 px-2 py-1 rounded-full">E-Tech Fun Fact</span>
+                  </div>
+                  <p className="text-purple-100 text-lg mb-2">{currentFunFact.icon} {currentFunFact.fact}</p>
+                  <p className="text-xs text-purple-200">Source: {currentFunFact.source}</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-white/20">
+                <p className="text-xs text-purple-200 flex items-center gap-2">
+                  <Info className="w-4 h-4" />
+                  Fun facts rotate every 8 seconds to help you learn while you explore!
+                </p>
+              </div>
             </div>
 
             {/* Limit Graph Toggle */}

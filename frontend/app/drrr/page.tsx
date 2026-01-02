@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Shield, AlertTriangle, CheckCircle, BookOpen } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, BookOpen, Info } from 'lucide-react';
 import HazardForm from '@/components/HazardForm';
 import { HAZARD_TYPES } from '@/lib/constants';
 
@@ -25,6 +25,13 @@ export default function DRRRPage() {
             Disaster Risk Reduction and Readiness. Practice identifying hazards, report 
             potential risks, and learn safety tips for emergency preparedness.
           </p>
+          {/* Subject Integration Badge */}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-sm font-medium">
+              <Info className="w-4 h-4" />
+              <span>DRRR Integration: Hazard Identification & Emergency Response</span>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}
