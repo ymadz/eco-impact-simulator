@@ -110,22 +110,10 @@ export default function ChemistryPage() {
               Percent by Weight (Weight/Weight Percentage)
             </p>
           </div>
-          <p className="text-gray-600 text-sm mb-4">
+          <p className="text-gray-600 text-sm">
             This formula calculates the <strong>percent by weight (%wt)</strong> of a pollutant in a solution. 
-            It shows what fraction of the total solution mass is made up by the solute (pollutant).
-          </p>
-          <div className="bg-purple-50 p-4 rounded-xl">
-            <p className="text-center text-xl font-mono font-bold text-purple-800 mb-2">
-              Concentration (C) = Pollutant Amount (n) ÷ Water Volume (V)
-            </p>
-            <p className="text-center text-sm text-purple-600">
-              Mass Concentration (g/L)
-            </p>
-          </div>
-          <p className="text-gray-600 text-sm mt-4">
-            The <strong>concentration</strong> of a pollutant depends on both the amount of pollutant AND 
-            the volume of water it enters. The same amount of detergent in a small canal is much more 
-            dangerous than in a large river!
+            It shows what fraction of the total solution mass is made up by the solute (pollutant). 
+            The same amount of detergent in a small canal creates a higher %wt concentration than in a large river!
           </p>
         </div>
 
