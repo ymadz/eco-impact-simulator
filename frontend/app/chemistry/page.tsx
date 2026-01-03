@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FlaskConical, Droplets, AlertTriangle, Info, Calculator, ArrowRightLeft } from 'lucide-react';
+import { FlaskConical, Droplets, AlertTriangle, Info, Calculator } from 'lucide-react';
 import PollutionTank from '@/components/PollutionTank';
 import { calculateConcentration, WATER_BODIES, POLLUTANTS } from '@/lib/calculations';
 
@@ -12,11 +12,9 @@ export default function ChemistryPage() {
   const [waterBody1, setWaterBody1] = useState('canal');
   const [waterBody2, setWaterBody2] = useState('river');
   
-  // Unit Converter State
-  const [showConverter, setShowConverter] = useState(false);
-  const [converterValue, setConverterValue] = useState(1);
-  const [converterFrom, setConverterFrom] = useState('mL');
-  const [converterTo, setConverterTo] = useState('L');
+  // %wt Calculator State
+  const [massSolute, setMassSolute] = useState(0);
+  const [massSolution, setMassSolution] = useState(0);
 
   // Convert pollutant amount to grams for calculations
   const getAmountInGrams = () => {
@@ -31,43 +29,10 @@ export default function ChemistryPage() {
   const result1 = calculateConcentration(amountInGrams, waterBody1, pollutantType);
   const result2 = calculateConcentration(amountInGrams, waterBody2, pollutantType);
 
-  // Unit Conversion Logic
-  const conversionFactors: Record<string, Record<string, number>> = {
-    // Volume conversions (base: mL)
-    'mL': { 'mL': 1, 'L': 0.001, 'gal': 0.000264172 },
-    'L': { 'mL': 1000, 'L': 1, 'gal': 0.264172 },
-    'gal': { 'mL': 3785.41, 'L': 3.78541, 'gal': 1 },
-    // Mass conversions (base: g)
-    'mg': { 'mg': 1, 'g': 0.001, 'kg': 0.000001 },
-    'g': { 'mg': 1000, 'g': 1, 'kg': 0.001 },
-    'kg': { 'mg': 1000000, 'g': 1000, 'kg': 1 },
-    // Moles (assuming water, molar mass ~18 g/mol)
-    'mol': { 'g': 18, 'mol': 1 },
-  };
-
-  const getConvertedValue = () => {
-    // Handle volume conversions
-    if (['mL', 'L', 'gal'].includes(converterFrom) && ['mL', 'L', 'gal'].includes(converterTo)) {
-      return (converterValue * conversionFactors[converterFrom][converterTo]).toFixed(4);
-    }
-    // Handle mass conversions
-    if (['mg', 'g', 'kg'].includes(converterFrom) && ['mg', 'g', 'kg'].includes(converterTo)) {
-      return (converterValue * conversionFactors[converterFrom][converterTo]).toFixed(4);
-    }
-    // Handle g to mol and vice versa (assuming generic substance ~18 g/mol like water)
-    if (converterFrom === 'g' && converterTo === 'mol') {
-      return (converterValue / 18).toFixed(4);
-    }
-    if (converterFrom === 'mol' && converterTo === 'g') {
-      return (converterValue * 18).toFixed(4);
-    }
-    return converterValue.toFixed(4);
-  };
-
-  const swapUnits = () => {
-    const temp = converterFrom;
-    setConverterFrom(converterTo);
-    setConverterTo(temp);
+  // Calculate %wt
+  const calculatePercentWeight = () => {
+    if (massSolution === 0) return 0;
+    return ((massSolute / massSolution) * 100).toFixed(2);
   };
 
   return (
@@ -117,103 +82,60 @@ export default function ChemistryPage() {
           </p>
         </div>
 
-        {/* Unit Converter Toggle */}
+        {/* %wt Calculator */}
         <div className="max-w-3xl mx-auto mb-8">
-          <button
-            onClick={() => setShowConverter(!showConverter)}
-            className="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
-          >
-            <Calculator className="h-5 w-5" />
-            {showConverter ? 'Hide' : 'Show'} Unit Converter
-          </button>
-
-          {showConverter && (
-            <div className="mt-4 bg-white p-6 rounded-2xl shadow-lg">
-              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <ArrowRightLeft className="h-5 w-5 text-purple-500" />
-                Unit Converter
-              </h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Value</label>
+          <div className="bg-white p-6 rounded-2xl shadow-lg">
+            <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <Calculator className="h-5 w-5 text-blue-500" />
+              %wt Calculator
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Mass of Solute (pollutant)</label>
+                <div className="flex">
                   <input
                     type="number"
-                    value={converterValue}
-                    onChange={(e) => setConverterValue(Number(e.target.value))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none text-gray-900 bg-white"
+                    value={massSolute}
+                    onChange={(e) => setMassSolute(Number(e.target.value))}
+                    min="0"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 bg-white"
+                    placeholder="Enter mass"
                   />
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">From</label>
-                    <select
-                      value={converterFrom}
-                      onChange={(e) => setConverterFrom(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-white"
-                    >
-                      <optgroup label="Volume">
-                        <option value="mL">milliliters (mL)</option>
-                        <option value="L">liters (L)</option>
-                        <option value="gal">gallons (gal)</option>
-                      </optgroup>
-                      <optgroup label="Mass">
-                        <option value="mg">milligrams (mg)</option>
-                        <option value="g">grams (g)</option>
-                        <option value="kg">kilograms (kg)</option>
-                      </optgroup>
-                      <optgroup label="Amount">
-                        <option value="mol">moles (mol)</option>
-                      </optgroup>
-                    </select>
-                  </div>
-                  
-                  <button
-                    onClick={swapUnits}
-                    className="mt-6 p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                  >
-                    <ArrowRightLeft className="h-5 w-5 text-gray-600" />
-                  </button>
-                  
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">To</label>
-                    <select
-                      value={converterTo}
-                      onChange={(e) => setConverterTo(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none bg-white"
-                    >
-                      <optgroup label="Volume">
-                        <option value="mL">milliliters (mL)</option>
-                        <option value="L">liters (L)</option>
-                        <option value="gal">gallons (gal)</option>
-                      </optgroup>
-                      <optgroup label="Mass">
-                        <option value="mg">milligrams (mg)</option>
-                        <option value="g">grams (g)</option>
-                        <option value="kg">kilograms (kg)</option>
-                      </optgroup>
-                      <optgroup label="Amount">
-                        <option value="mol">moles (mol)</option>
-                      </optgroup>
-                    </select>
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Result</label>
-                  <div className="px-4 py-3 bg-purple-50 border border-purple-200 rounded-lg text-purple-800 font-bold text-lg">
-                    {getConvertedValue()} {converterTo}
-                  </div>
+                  <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
+                    grams
+                  </span>
                 </div>
               </div>
-
-              <div className="mt-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-                <strong>Note:</strong> Mole conversions assume water (H₂O) with molar mass ≈ 18 g/mol. 
-                For other substances, multiply by their specific molar mass.
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Mass of Solution (total)</label>
+                <div className="flex">
+                  <input
+                    type="number"
+                    value={massSolution}
+                    onChange={(e) => setMassSolution(Number(e.target.value))}
+                    min="0"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 bg-white"
+                    placeholder="Enter mass"
+                  />
+                  <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
+                    grams
+                  </span>
+                </div>
               </div>
             </div>
-          )}
+
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-blue-800">Percent by Weight (%wt):</span>
+                <span className="text-2xl font-bold text-blue-900">{calculatePercentWeight()}%</span>
+              </div>
+              <p className="text-xs text-blue-600 mt-2">
+                This represents what percentage of the total solution is made up of the pollutant.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Controls */}
