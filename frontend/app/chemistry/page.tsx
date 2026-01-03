@@ -246,11 +246,13 @@ export default function ChemistryPage() {
                     className={`p-3 rounded-lg border-2 text-left transition-all ${
                       pollutantType === key
                         ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        : 'border-gray-200 hover:border-gray-300 bg-white'
                     }`}
                   >
-                    <div className="font-semibold">{pollutant.name}</div>
-                    <div className="text-xs text-gray-500">
+                    <div className={`font-semibold ${pollutantType === key ? 'text-blue-900' : 'text-gray-900'}`}>
+                      {pollutant.name}
+                    </div>
+                    <div className={`text-xs ${pollutantType === key ? 'text-blue-700' : 'text-gray-700'}`}>
                       Toxicity Factor: {pollutant.toxicityFactor}x
                     </div>
                   </button>
