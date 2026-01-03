@@ -103,14 +103,29 @@ export default function ChemistryPage() {
             The Science Behind It
           </h2>
           <div className="bg-blue-50 p-4 rounded-xl mb-4">
-            <p className="text-center text-2xl font-mono font-bold text-blue-800">
-              Concentration (C) = Pollutant Amount (n) ÷ Water Volume (V)
+            <p className="text-center text-2xl font-mono font-bold text-blue-800 mb-2">
+              %wt = (mass solute ÷ mass solution) × 100
+            </p>
+            <p className="text-center text-sm text-blue-600">
+              Percent by Weight (Weight/Weight Percentage)
             </p>
           </div>
-          <p className="text-gray-600 text-sm">
-            This formula shows that the <strong>concentration</strong> of a pollutant depends 
-            on both the amount of pollutant AND the volume of water it enters. The same amount 
-            of detergent in a small canal is much more dangerous than in a large river!
+          <p className="text-gray-600 text-sm mb-4">
+            This formula calculates the <strong>percent by weight (%wt)</strong> of a pollutant in a solution. 
+            It shows what fraction of the total solution mass is made up by the solute (pollutant).
+          </p>
+          <div className="bg-purple-50 p-4 rounded-xl">
+            <p className="text-center text-xl font-mono font-bold text-purple-800 mb-2">
+              Concentration (C) = Pollutant Amount (n) ÷ Water Volume (V)
+            </p>
+            <p className="text-center text-sm text-purple-600">
+              Mass Concentration (g/L)
+            </p>
+          </div>
+          <p className="text-gray-600 text-sm mt-4">
+            The <strong>concentration</strong> of a pollutant depends on both the amount of pollutant AND 
+            the volume of water it enters. The same amount of detergent in a small canal is much more 
+            dangerous than in a large river!
           </p>
         </div>
 
@@ -138,7 +153,7 @@ export default function ChemistryPage() {
                     type="number"
                     value={converterValue}
                     onChange={(e) => setConverterValue(Number(e.target.value))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none text-gray-900 bg-white"
                   />
                 </div>
                 
@@ -255,12 +270,12 @@ export default function ChemistryPage() {
                   onChange={(e) => setPollutantAmount(Number(e.target.value))}
                   min="1"
                   max="10000"
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 bg-white"
                 />
                 <select
                   value={pollutantUnit}
                   onChange={(e) => setPollutantUnit(e.target.value as 'g' | 'kg' | 'mg')}
-                  className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                  className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white text-gray-900"
                 >
                   <option value="mg">mg</option>
                   <option value="g">g</option>

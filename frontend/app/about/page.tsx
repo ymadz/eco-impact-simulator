@@ -1,6 +1,16 @@
-import { Leaf, Target, BookOpen, Users, Code } from 'lucide-react';
+import { Leaf, Target, BookOpen, Users, Code, User } from 'lucide-react';
 
 export default function AboutPage() {
+  // Team members placeholder data
+  const teamMembers = [
+    { name: 'Team Member 1', role: 'Role / Position', image: null },
+    { name: 'Team Member 2', role: 'Role / Position', image: null },
+    { name: 'Team Member 3', role: 'Role / Position', image: null },
+    { name: 'Team Member 4', role: 'Role / Position', image: null },
+    { name: 'Team Member 5', role: 'Role / Position', image: null },
+    { name: 'Team Member 6', role: 'Role / Position', image: null },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -96,14 +106,9 @@ export default function AboutPage() {
                   <td className="px-4 py-3 text-gray-600">UX/UI Design, JavaScript, Interactive State</td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3 text-gray-600">Calculus</td>
-                  <td className="px-4 py-3 text-gray-600">Limit Projector</td>
-                  <td className="px-4 py-3 text-gray-600">Limits (lim x→∞), Functions, Asymptotes</td>
-                </tr>
-                <tr>
                   <td className="px-4 py-3 text-gray-600">Chemistry</td>
                   <td className="px-4 py-3 text-gray-600">Pollution Lab</td>
-                  <td className="px-4 py-3 text-gray-600">Concentration (C=n/V), Dilution</td>
+                  <td className="px-4 py-3 text-gray-600">Concentration (%wt, C=n/V), Dilution</td>
                 </tr>
                 <tr>
                   <td className="px-4 py-3 text-gray-600">DRRR</td>
@@ -112,7 +117,7 @@ export default function AboutPage() {
                 </tr>
                 <tr>
                   <td className="px-4 py-3 text-gray-600">Statistics</td>
-                  <td className="px-4 py-3 text-gray-600">Did You Know</td>
+                  <td className="px-4 py-3 text-gray-600">Survey Insights</td>
                   <td className="px-4 py-3 text-gray-600">Data Aggregation, Trends Analysis</td>
                 </tr>
               </tbody>
@@ -170,7 +175,7 @@ export default function AboutPage() {
         </section>
 
         {/* Expected Outcomes */}
-        <section className="bg-white p-8 rounded-2xl shadow-lg">
+        <section className="bg-white p-8 rounded-2xl shadow-lg mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
             🎯 Expected Outcomes
           </h2>
@@ -183,6 +188,36 @@ export default function AboutPage() {
               <div key={index} className="flex gap-3 items-start bg-green-50 p-4 rounded-xl">
                 <span className="text-green-600 text-xl">✓</span>
                 <p className="text-gray-700">{outcome}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Team Members */}
+        <section className="bg-white p-8 rounded-2xl shadow-lg">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+            <Users className="h-6 w-6 text-green-600" />
+            Our Team
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Meet the dedicated team behind the Eco-Impact Simulator project.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            {teamMembers.map((member, index) => (
+              <div key={index} className="text-center">
+                <div className="w-24 h-24 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center border-2 border-gray-200">
+                  {member.image ? (
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <User className="w-10 h-10 text-gray-400" />
+                  )}
+                </div>
+                <h3 className="font-semibold text-gray-800">{member.name}</h3>
+                <p className="text-sm text-gray-500">{member.role}</p>
               </div>
             ))}
           </div>

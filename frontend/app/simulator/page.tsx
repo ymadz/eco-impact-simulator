@@ -1,26 +1,36 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Zap, Droplets, Trash2, TrendingUp, Calculator, Leaf, Info, Lightbulb } from 'lucide-react';
-import LimitGraph from '@/components/LimitGraph';
-import { calculateEcoScore, calculateProjection } from '@/lib/calculations';
+import { RefreshCw, Zap, Droplets, Trash2, Calculator, Leaf, Info, Lightbulb, MapPin } from 'lucide-react';
+import { calculateEcoScore } from '@/lib/calculations';
 import { FUN_FACTS, USAGE_ANALOGIES, WASTE_TYPES } from '@/lib/constants';
 
-type TabType = 'energy' | 'water' | 'waste';
+type LocationType = 'school' | 'house' | 'office' | 'community';
 
 export default function SimulatorPage() {
-  const [activeTab, setActiveTab] = useState<TabType>('energy');
+  const [location, setLocation] = useState<LocationType>('school');
   const [electricity, setElectricity] = useState(5);
   const [water, setWater] = useState(20);
   const [waste, setWaste] = useState(2);
-  const [wasteType, setWasteType] = useState('paper');
-  const [dailyIncrease, setDailyIncrease] = useState(0.5);
   const [showResults, setShowResults] = useState(false);
-  const [showLimitGraph, setShowLimitGraph] = useState(false);
   const [currentFunFact, setCurrentFunFact] = useState(FUN_FACTS[0]);
 
+  // Location-based max values
+  const locationMaxValues = {
+    school: { electricity: 50, water: 200, waste: 20 },
+    house: { electricity: 30, water: 150, waste: 10 },
+    office: { electricity: 40, water: 100, waste: 15 },
+    community: { electricity: 100, water: 500, waste: 50 },
+  };
+
+  const locationLabels = {
+    school: { name: 'School', icon: '🏫' },
+    house: { name: 'House', icon: '🏠' },
+    office: { name: 'Office', icon: '🏢' },
+    community: { name: 'Community', icon: '🏘️' },
+  };
+
   const ecoResult = calculateEcoScore(electricity, water, waste);
-  const projectionData = calculateProjection(dailyIncrease);
 
   // Rotate fun facts
   useEffect(() => {
@@ -35,12 +45,12 @@ export default function SimulatorPage() {
 
   // Get relevant analogies for current input
   const getWaterAnalogy = () => {
-    const sorted = USAGE_ANALOGIES.water.sort((a, b) => Math.abs(a.amount - water) - Math.abs(b.amount - water));
+    const sorted = [...USAGE_ANALOGIES.water].sort((a, b) => Math.abs(a.amount - water) - Math.abs(b.amount - water));
     return sorted[0];
   };
 
   const getEnergyAnalogy = () => {
-    const sorted = USAGE_ANALOGIES.energy.sort((a, b) => Math.abs(a.amount - electricity) - Math.abs(b.amount - electricity));
+    const sorted = [...USAGE_ANALOGIES.energy].sort((a, b) => Math.abs(a.amount - electricity) - Math.abs(b.amount - electricity));
     return sorted[0];
   };
 
@@ -52,16 +62,8 @@ export default function SimulatorPage() {
     setElectricity(5);
     setWater(20);
     setWaste(2);
-    setWasteType('paper');
     setShowResults(false);
-    setShowLimitGraph(false);
   };
-
-  const tabs = [
-    { id: 'energy' as TabType, label: 'Energy Use', icon: Zap },
-    { id: 'water' as TabType, label: 'Water Usage', icon: Droplets },
-    { id: 'waste' as TabType, label: 'Waste Production', icon: Trash2 },
-  ];
 
   const getGradeColor = (grade: string) => {
     switch (grade) {
@@ -75,7 +77,7 @@ export default function SimulatorPage() {
 
   return (
     <main className="min-h-screen bg-white pt-24">
-      {/* Header - Chemistry style */}
+      {/* Header */}
       <div className="text-center mb-10">
         <div className="flex justify-center mb-4">
           <div className="bg-green-100 p-4 rounded-full">
@@ -94,225 +96,193 @@ export default function SimulatorPage() {
             <Info className="w-4 h-4" />
             <span>E-Tech: Data Interpretation & Surveys</span>
           </div>
-          <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium">
-            <Info className="w-4 h-4" />
-            <span>Calculus: Limits & Projections</span>
-          </div>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 pb-8">
-        {/* Tabs */}
-        <div className="flex border-b border-gray-200 mb-8">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
-                activeTab === tab.id
-                  ? 'border-green-600 text-green-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <tab.icon className="w-4 h-4" />
-              {tab.label}
-            </button>
-          ))}
+        {/* Location Selector */}
+        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
+          <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <MapPin className="w-5 h-5 text-green-600" />
+            Select Location to Calculate Impact
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {(Object.keys(locationLabels) as LocationType[]).map((loc) => (
+              <button
+                key={loc}
+                onClick={() => setLocation(loc)}
+                className={`p-4 rounded-xl border-2 transition-all ${
+                  location === loc
+                    ? 'border-green-500 bg-green-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="text-2xl mb-2">{locationLabels[loc].icon}</div>
+                <div className="font-medium text-gray-900">{locationLabels[loc].name}</div>
+                <div className="text-xs text-gray-500 mt-1">
+                  Max: {locationMaxValues[loc].electricity} kWh
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Tab Content */}
+        {/* Input Section */}
         <div className="bg-gray-50 rounded-xl p-6 mb-8">
-          {activeTab === 'energy' && (
-            <div className="space-y-6">
-              <h2 className="font-semibold text-gray-900 mb-4">Energy Consumption</h2>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Daily Electricity Usage
-                  </label>
-                  <div className="flex">
-                    <input
-                      type="number"
-                      value={electricity}
-                      onChange={(e) => setElectricity(Number(e.target.value))}
-                      min="0"
-                      max="50"
-                      className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                    />
-                    <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                      kWh
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">Average: 5 kWh per day</p>
-                  
-                  {/* Energy Analogies */}
-                  <div className="mt-3 p-3 bg-yellow-50 rounded-lg">
-                    <p className="text-sm font-medium text-yellow-800 mb-2 flex items-center gap-2">
-                      <Lightbulb className="w-4 h-4" />
-                      Quick Reference:
-                    </p>
-                    <div className="grid grid-cols-2 gap-2 text-xs text-yellow-700">
-                      {USAGE_ANALOGIES.energy.slice(0, 4).map((item, idx) => (
-                        <div key={idx} className="flex items-center gap-1">
-                          <span>{item.icon}</span>
-                          <span>{item.description}: {item.amount} kWh</span>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="text-xs text-yellow-600 mt-2 font-medium">
-                      ≈ {Math.round(electricity / (getEnergyAnalogy()?.amount || 1))} {getEnergyAnalogy()?.description}(s) worth
-                    </p>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Appliance Type
-                  </label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white">
-                    <option>Lights & Fans</option>
-                    <option>Air Conditioning</option>
-                    <option>Computers & Devices</option>
-                    <option>Kitchen Appliances</option>
-                  </select>
-                </div>
-              </div>
+          <h2 className="font-semibold text-gray-900 mb-6">Resource Consumption for {locationLabels[location].name}</h2>
+          
+          {/* Energy Input */}
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Zap className="w-5 h-5 text-yellow-600" />
+              <h3 className="font-medium text-gray-800">Energy Consumption</h3>
             </div>
-          )}
-
-          {activeTab === 'water' && (
-            <div className="space-y-6">
-              <h2 className="font-semibold text-gray-900 mb-4">Water Consumption</h2>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Daily Water Usage
-                  </label>
-                  <div className="flex">
-                    <input
-                      type="number"
-                      value={water}
-                      onChange={(e) => setWater(Number(e.target.value))}
-                      min="0"
-                      max="200"
-                      className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                    />
-                    <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                      Liters
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">Average: 20 liters per day</p>
-                  
-                  {/* Water Analogies */}
-                  <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-                    <p className="text-sm font-medium text-blue-800 mb-2 flex items-center gap-2">
-                      <Droplets className="w-4 h-4" />
-                      Quick Reference:
-                    </p>
-                    <div className="grid grid-cols-2 gap-2 text-xs text-blue-700">
-                      {USAGE_ANALOGIES.water.slice(0, 4).map((item, idx) => (
-                        <div key={idx} className="flex items-center gap-1">
-                          <span>{item.icon}</span>
-                          <span>{item.description}: {item.amount}L</span>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="text-xs text-blue-600 mt-2 font-medium">
-                      ≈ {Math.round(water / (getWaterAnalogy()?.amount || 1))} {getWaterAnalogy()?.description}(s) worth
-                    </p>
-                  </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Daily Electricity Usage
+                </label>
+                <div className="flex">
+                  <input
+                    type="number"
+                    value={electricity}
+                    onChange={(e) => setElectricity(Number(e.target.value))}
+                    min="0"
+                    max={locationMaxValues[location].electricity}
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white"
+                  />
+                  <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
+                    kWh
+                  </span>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Primary Usage
-                  </label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white">
-                    <option>Drinking & Cooking</option>
-                    <option>Cleaning</option>
-                    <option>Bathroom</option>
-                    <option>Garden/Plants</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'waste' && (
-            <div className="space-y-6">
-              <h2 className="font-semibold text-gray-900 mb-4">Waste Production</h2>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Daily Waste Generated
-                  </label>
-                  <div className="flex">
-                    <input
-                      type="number"
-                      value={waste}
-                      onChange={(e) => setWaste(Number(e.target.value))}
-                      min="0"
-                      max="20"
-                      step="0.1"
-                      className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-                    />
-                    <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                      kg
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">Average: 2 kg per day</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Waste Type (from survey data)
-                  </label>
-                  <select 
-                    value={wasteType}
-                    onChange={(e) => setWasteType(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white"
-                  >
-                    {WASTE_TYPES.map((type) => (
-                      <option key={type.id} value={type.id}>
-                        {type.icon} {type.name} ({type.percentage}% of students)
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Survey-based waste info */}
-              <div className="p-4 bg-green-50 rounded-xl">
-                <h4 className="text-sm font-semibold text-green-800 mb-3 flex items-center gap-2">
-                  <Info className="w-4 h-4" />
-                  Survey Insights: Waste Types at School
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {WASTE_TYPES.map((type) => (
-                    <div 
-                      key={type.id} 
-                      className={`p-3 rounded-lg text-sm ${wasteType === type.id ? 'bg-green-200' : 'bg-white'}`}
-                    >
-                      <div className="flex items-center gap-2 font-medium">
-                        <span className="text-lg">{type.icon}</span>
-                        <span className="text-gray-800">{type.percentage}%</span>
+                <p className="text-xs text-gray-500 mt-1">Max for {locationLabels[location].name}: {locationMaxValues[location].electricity} kWh per day</p>
+                
+                {/* Energy Analogies */}
+                <div className="mt-3 p-3 bg-yellow-50 rounded-lg">
+                  <p className="text-sm font-medium text-yellow-800 mb-2 flex items-center gap-2">
+                    <Lightbulb className="w-4 h-4" />
+                    Quick Reference:
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-yellow-700">
+                    {USAGE_ANALOGIES.energy.slice(0, 4).map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-1">
+                        <span>{item.icon}</span>
+                        <span>{item.description}: {item.amount} kWh</span>
                       </div>
-                      <p className="text-xs text-gray-600 mt-1">{type.name}</p>
-                      <p className="text-xs text-green-600 mt-1">💡 {type.tip}</p>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                  <p className="text-xs text-yellow-600 mt-2 font-medium">
+                    ≈ {Math.round(electricity / (getEnergyAnalogy()?.amount || 1))} {getEnergyAnalogy()?.description}(s) worth
+                  </p>
                 </div>
               </div>
             </div>
-          )}
+          </div>
+
+          {/* Water Input */}
+          <div className="mb-6 pt-6 border-t border-gray-200">
+            <div className="flex items-center gap-2 mb-4">
+              <Droplets className="w-5 h-5 text-blue-600" />
+              <h3 className="font-medium text-gray-800">Water Consumption</h3>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Daily Water Usage
+                </label>
+                <div className="flex">
+                  <input
+                    type="number"
+                    value={water}
+                    onChange={(e) => setWater(Number(e.target.value))}
+                    min="0"
+                    max={locationMaxValues[location].water}
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white"
+                  />
+                  <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
+                    Liters
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Max for {locationLabels[location].name}: {locationMaxValues[location].water} liters per day</p>
+                
+                {/* Water Analogies */}
+                <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                  <p className="text-sm font-medium text-blue-800 mb-2 flex items-center gap-2">
+                    <Droplets className="w-4 h-4" />
+                    Quick Reference:
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-blue-700">
+                    {USAGE_ANALOGIES.water.slice(0, 4).map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-1">
+                        <span>{item.icon}</span>
+                        <span>{item.description}: {item.amount}L</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-blue-600 mt-2 font-medium">
+                    ≈ {Math.round(water / (getWaterAnalogy()?.amount || 1))} {getWaterAnalogy()?.description}(s) worth
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Waste Input */}
+          <div className="pt-6 border-t border-gray-200">
+            <div className="flex items-center gap-2 mb-4">
+              <Trash2 className="w-5 h-5 text-green-600" />
+              <h3 className="font-medium text-gray-800">Waste Production</h3>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Daily Waste Generated
+                </label>
+                <div className="flex">
+                  <input
+                    type="number"
+                    value={waste}
+                    onChange={(e) => setWaste(Number(e.target.value))}
+                    min="0"
+                    max={locationMaxValues[location].waste}
+                    step="0.1"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white"
+                  />
+                  <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
+                    kg
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Max for {locationLabels[location].name}: {locationMaxValues[location].waste} kg per day</p>
+              </div>
+            </div>
+
+            {/* Waste Reference Tips */}
+            <div className="mt-4 p-4 bg-green-50 rounded-xl">
+              <h4 className="text-sm font-semibold text-green-800 mb-3 flex items-center gap-2">
+                <Info className="w-4 h-4" />
+                Reference Tips: Common Waste Types
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {WASTE_TYPES.map((type) => (
+                  <div 
+                    key={type.id} 
+                    className="p-3 rounded-lg bg-white text-sm"
+                  >
+                    <div className="flex items-center gap-2 font-medium">
+                      <span className="text-lg">{type.icon}</span>
+                      <span className="text-gray-800">{type.name}</span>
+                    </div>
+                    <p className="text-xs text-green-600 mt-1">💡 {type.tip}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Summary & Actions */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
-          <h3 className="font-semibold text-gray-900 mb-4">Current Input Summary</h3>
+          <h3 className="font-semibold text-gray-900 mb-4">Current Input Summary for {locationLabels[location].name}</h3>
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center p-4 bg-yellow-50 rounded-lg">
               <Zap className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
@@ -354,7 +324,7 @@ export default function SimulatorPage() {
           <div className="space-y-6">
             {/* Eco Score Result */}
             <div className="bg-white border border-gray-200 rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Your Eco-Impact Score</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">Your Eco-Impact Score for {locationLabels[location].name}</h3>
               
               <div className="flex items-center gap-6 mb-6">
                 <div className={`w-24 h-24 rounded-full flex items-center justify-center ${getGradeColor(ecoResult.grade)}`}>
@@ -378,7 +348,7 @@ export default function SimulatorPage() {
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-yellow-500 h-2 rounded-full transition-all"
-                      style={{ width: `${Math.min((electricity / 20) * 100, 100)}%` }}
+                      style={{ width: `${Math.min((electricity / locationMaxValues[location].electricity) * 100, 100)}%` }}
                     />
                   </div>
                 </div>
@@ -391,7 +361,7 @@ export default function SimulatorPage() {
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-blue-500 h-2 rounded-full transition-all"
-                      style={{ width: `${Math.min((water / 100) * 100, 100)}%` }}
+                      style={{ width: `${Math.min((water / locationMaxValues[location].water) * 100, 100)}%` }}
                     />
                   </div>
                 </div>
@@ -404,7 +374,7 @@ export default function SimulatorPage() {
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-green-500 h-2 rounded-full transition-all"
-                      style={{ width: `${Math.min((waste / 10) * 100, 100)}%` }}
+                      style={{ width: `${Math.min((waste / locationMaxValues[location].waste) * 100, 100)}%` }}
                     />
                   </div>
                 </div>
@@ -469,48 +439,6 @@ export default function SimulatorPage() {
                   Fun facts rotate every 8 seconds to help you learn while you explore!
                 </p>
               </div>
-            </div>
-
-            {/* Limit Graph Toggle */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900">Long-term Projection</h3>
-                  <p className="text-sm text-gray-600">Calculus-based limit analysis of environmental impact</p>
-                </div>
-                <button
-                  onClick={() => setShowLimitGraph(!showLimitGraph)}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2"
-                >
-                  <TrendingUp className="w-4 h-4" />
-                  {showLimitGraph ? 'Hide' : 'Show'} Projection
-                </button>
-              </div>
-
-              {showLimitGraph && (
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Daily Waste Increase Rate
-                    </label>
-                    <div className="flex items-center gap-4">
-                      <input
-                        type="range"
-                        min="0.1"
-                        max="5"
-                        step="0.1"
-                        value={dailyIncrease}
-                        onChange={(e) => setDailyIncrease(Number(e.target.value))}
-                        className="flex-1 h-2 bg-purple-100 rounded-lg appearance-none cursor-pointer accent-purple-600"
-                      />
-                      <span className="text-lg font-bold text-purple-600 w-20 text-right">
-                        {dailyIncrease} kg
-                      </span>
-                    </div>
-                  </div>
-                  <LimitGraph data={projectionData} dailyIncrease={dailyIncrease} />
-                </div>
-              )}
             </div>
           </div>
         )}

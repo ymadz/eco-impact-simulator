@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Leaf, Calculator, FlaskConical, ShieldAlert, TrendingUp } from 'lucide-react';
+import { ArrowRight, Leaf, Calculator, FlaskConical, ShieldAlert, Info } from 'lucide-react';
+import { SURVEY_STATS } from '@/lib/constants';
 
 export default function Home() {
   return (
@@ -56,7 +57,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Resource Simulator */}
             <Link href="/simulator" className="group">
               <div className="bg-gray-50 border border-gray-100 rounded-xl p-6 hover:shadow-lg hover:border-green-300 hover:bg-white transition-all h-full">
@@ -85,20 +86,6 @@ export default function Home() {
               </div>
             </Link>
 
-            {/* Limit Projector */}
-            <Link href="/simulator" className="group">
-              <div className="bg-gray-50 border border-gray-100 rounded-xl p-6 hover:shadow-lg hover:border-blue-300 hover:bg-white transition-all h-full">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-                  <TrendingUp className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Limit Projector</h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  See long-term environmental impact projections using calculus
-                </p>
-                <span className="text-xs text-blue-600 font-medium">Calculus Integration →</span>
-              </div>
-            </Link>
-
             {/* Safety Center */}
             <Link href="/drrr" className="group">
               <div className="bg-gray-50 border border-gray-100 rounded-xl p-6 hover:shadow-lg hover:border-orange-300 hover:bg-white transition-all h-full">
@@ -112,6 +99,44 @@ export default function Home() {
                 <span className="text-xs text-orange-600 font-medium">DRRR Integration →</span>
               </div>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="w-full h-px bg-gray-200"></div>
+
+      {/* Survey Insights Section */}
+      <section className="py-20 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
+              <Info className="w-4 h-4" />
+              <span>E-Tech Integration: Survey Data Analysis</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">
+              Survey Insights from Our School
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Real data collected from students about their daily resource consumption and waste habits
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SURVEY_STATS.map((stat) => (
+              <div key={stat.id} className="bg-gray-50 border border-gray-100 rounded-xl p-6 hover:shadow-lg transition-all">
+                <div className="flex items-start gap-4">
+                  <span className="text-3xl">{stat.icon}</span>
+                  <div>
+                    <div className="text-3xl font-bold text-green-600 mb-1">{stat.stat}</div>
+                    <p className="text-sm text-gray-600 mb-3">{stat.description}</p>
+                    <div className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-100 px-2 py-1 rounded-full">
+                      💡 {stat.action}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -176,7 +201,7 @@ export default function Home() {
               <p className="text-gray-600 text-sm">Simulations completed</p>
             </div>
             <div>
-              <div className="text-4xl font-bold text-green-600 mb-2">4</div>
+              <div className="text-4xl font-bold text-green-600 mb-2">3</div>
               <p className="text-gray-600 text-sm">Subjects integrated</p>
             </div>
             <div>
