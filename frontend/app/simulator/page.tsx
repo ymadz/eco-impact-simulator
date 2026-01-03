@@ -43,17 +43,6 @@ export default function SimulatorPage() {
     }
   }, [showResults]);
 
-  // Get relevant analogies for current input
-  const getWaterAnalogy = () => {
-    const sorted = [...USAGE_ANALOGIES.water].sort((a, b) => Math.abs(a.amount - water) - Math.abs(b.amount - water));
-    return sorted[0];
-  };
-
-  const getEnergyAnalogy = () => {
-    const sorted = [...USAGE_ANALOGIES.energy].sort((a, b) => Math.abs(a.amount - electricity) - Math.abs(b.amount - electricity));
-    return sorted[0];
-  };
-
   const handleCalculate = () => {
     setShowResults(true);
   };
@@ -128,156 +117,165 @@ export default function SimulatorPage() {
         </div>
 
         {/* Input Section */}
-        <div className="bg-gray-50 rounded-xl p-6 mb-8">
-          <h2 className="font-semibold text-gray-900 mb-6">Resource Consumption for {locationLabels[location].name}</h2>
+        <div className="mb-8">
+          <h2 className="font-semibold text-gray-900 mb-6 text-center">Resource Consumption for {locationLabels[location].name}</h2>
           
-          {/* Energy Input */}
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Zap className="w-5 h-5 text-yellow-600" />
-              <h3 className="font-medium text-gray-800">Energy Consumption</h3>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Daily Electricity Usage
-                </label>
-                <div className="flex">
-                  <input
-                    type="number"
-                    value={electricity}
-                    onChange={(e) => setElectricity(Number(e.target.value))}
-                    min="0"
-                    max={locationMaxValues[location].electricity}
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white"
-                  />
-                  <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                    kWh
-                  </span>
+          {/* Three Column Grid for Inputs */}
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Energy Card */}
+            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-yellow-600" />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Max for {locationLabels[location].name}: {locationMaxValues[location].electricity} kWh per day</p>
-                
-                {/* Energy Analogies */}
-                <div className="mt-3 p-3 bg-yellow-50 rounded-lg">
-                  <p className="text-sm font-medium text-yellow-800 mb-2 flex items-center gap-2">
-                    <Lightbulb className="w-4 h-4" />
-                    Quick Reference:
-                  </p>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-yellow-700">
-                    {USAGE_ANALOGIES.energy.slice(0, 4).map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-1">
-                        <span>{item.icon}</span>
-                        <span>{item.description}: {item.amount} kWh</span>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-xs text-yellow-600 mt-2 font-medium">
-                    ≈ {Math.round(electricity / (getEnergyAnalogy()?.amount || 1))} {getEnergyAnalogy()?.description}(s) worth
-                  </p>
-                </div>
+                <h3 className="font-semibold text-gray-800">Energy</h3>
               </div>
-            </div>
-          </div>
-
-          {/* Water Input */}
-          <div className="mb-6 pt-6 border-t border-gray-200">
-            <div className="flex items-center gap-2 mb-4">
-              <Droplets className="w-5 h-5 text-blue-600" />
-              <h3 className="font-medium text-gray-800">Water Consumption</h3>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Daily Water Usage
-                </label>
-                <div className="flex">
-                  <input
-                    type="number"
-                    value={water}
-                    onChange={(e) => setWater(Number(e.target.value))}
-                    min="0"
-                    max={locationMaxValues[location].water}
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white"
-                  />
-                  <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                    Liters
-                  </span>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">Max for {locationLabels[location].name}: {locationMaxValues[location].water} liters per day</p>
-                
-                {/* Water Analogies */}
-                <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-                  <p className="text-sm font-medium text-blue-800 mb-2 flex items-center gap-2">
-                    <Droplets className="w-4 h-4" />
-                    Quick Reference:
-                  </p>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-blue-700">
-                    {USAGE_ANALOGIES.water.slice(0, 4).map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-1">
-                        <span>{item.icon}</span>
-                        <span>{item.description}: {item.amount}L</span>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-xs text-blue-600 mt-2 font-medium">
-                    ≈ {Math.round(water / (getWaterAnalogy()?.amount || 1))} {getWaterAnalogy()?.description}(s) worth
-                  </p>
-                </div>
+              
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Daily Electricity Usage
+              </label>
+              <div className="flex mb-2">
+                <input
+                  type="number"
+                  value={electricity}
+                  onChange={(e) => setElectricity(Number(e.target.value))}
+                  min="0"
+                  max={locationMaxValues[location].electricity}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white text-sm"
+                />
+                <span className="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
+                  kWh
+                </span>
               </div>
-            </div>
-          </div>
-
-          {/* Waste Input */}
-          <div className="pt-6 border-t border-gray-200">
-            <div className="flex items-center gap-2 mb-4">
-              <Trash2 className="w-5 h-5 text-green-600" />
-              <h3 className="font-medium text-gray-800">Waste Production</h3>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Daily Waste Generated
-                </label>
-                <div className="flex">
-                  <input
-                    type="number"
-                    value={waste}
-                    onChange={(e) => setWaste(Number(e.target.value))}
-                    min="0"
-                    max={locationMaxValues[location].waste}
-                    step="0.1"
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white"
-                  />
-                  <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                    kg
-                  </span>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">Max for {locationLabels[location].name}: {locationMaxValues[location].waste} kg per day</p>
-              </div>
-            </div>
-
-            {/* Waste Reference Tips */}
-            <div className="mt-4 p-4 bg-green-50 rounded-xl">
-              <h4 className="text-sm font-semibold text-green-800 mb-3 flex items-center gap-2">
-                <Info className="w-4 h-4" />
-                Reference Tips: Common Waste Types
-              </h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {WASTE_TYPES.map((type) => (
-                  <div 
-                    key={type.id} 
-                    className="p-3 rounded-lg bg-white text-sm"
-                  >
-                    <div className="flex items-center gap-2 font-medium">
-                      <span className="text-lg">{type.icon}</span>
-                      <span className="text-gray-800">{type.name}</span>
+              <p className="text-xs text-gray-500 mb-3">Max: {locationMaxValues[location].electricity} kWh/day</p>
+              
+              {/* Compact Reference */}
+              <div className="p-3 bg-yellow-50 rounded-lg">
+                <p className="text-xs font-medium text-yellow-800 mb-2 flex items-center gap-1">
+                  <Lightbulb className="w-3 h-3" />
+                  Quick Reference
+                </p>
+                <div className="space-y-1 text-xs text-yellow-700">
+                  {USAGE_ANALOGIES.energy.slice(0, 3).map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-1">
+                      <span>{item.icon}</span>
+                      <span className="truncate">{item.description}: {item.amount}</span>
                     </div>
-                    <p className="text-xs text-green-600 mt-1">💡 {type.tip}</p>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Water Card */}
+            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Droplets className="w-5 h-5 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-gray-800">Water</h3>
+              </div>
+              
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Daily Water Usage
+              </label>
+              <div className="flex mb-2">
+                <input
+                  type="number"
+                  value={water}
+                  onChange={(e) => setWater(Number(e.target.value))}
+                  min="0"
+                  max={locationMaxValues[location].water}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white text-sm"
+                />
+                <span className="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
+                  Liters
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mb-3">Max: {locationMaxValues[location].water} L/day</p>
+              
+              {/* Compact Reference */}
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <p className="text-xs font-medium text-blue-800 mb-2 flex items-center gap-1">
+                  <Droplets className="w-3 h-3" />
+                  Quick Reference
+                </p>
+                <div className="space-y-1 text-xs text-blue-700">
+                  {USAGE_ANALOGIES.water.slice(0, 3).map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-1">
+                      <span>{item.icon}</span>
+                      <span className="truncate">{item.description}: {item.amount}L</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Waste Card */}
+            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                  <Trash2 className="w-5 h-5 text-green-600" />
+                </div>
+                <h3 className="font-semibold text-gray-800">Waste</h3>
+              </div>
+              
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Daily Waste Generated
+              </label>
+              <div className="flex mb-2">
+                <input
+                  type="number"
+                  value={waste}
+                  onChange={(e) => setWaste(Number(e.target.value))}
+                  min="0"
+                  max={locationMaxValues[location].waste}
+                  step="0.1"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white text-sm"
+                />
+                <span className="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
+                  kg
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mb-3">Max: {locationMaxValues[location].waste} kg/day</p>
+              
+              {/* Compact Reference */}
+              <div className="p-3 bg-green-50 rounded-lg">
+                <p className="text-xs font-medium text-green-800 mb-2 flex items-center gap-1">
+                  <Info className="w-3 h-3" />
+                  Common Waste Types
+                </p>
+                <div className="space-y-1 text-xs text-green-700">
+                  {WASTE_TYPES.slice(0, 3).map((type) => (
+                    <div key={type.id} className="flex items-center gap-1">
+                      <span>{type.icon}</span>
+                      <span className="truncate">{type.name}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Waste Tips - Full Width Below */}
+          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+            <h4 className="text-sm font-semibold text-green-800 mb-3 flex items-center gap-2">
+              <Info className="w-4 h-4" />
+              Reference Tips: How to Reduce Waste
+            </h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+              {WASTE_TYPES.map((type) => (
+                <div 
+                  key={type.id} 
+                  className="p-2 rounded-lg bg-white text-center"
+                >
+                  <span className="text-xl">{type.icon}</span>
+                  <p className="text-xs font-medium text-gray-800 mt-1">{type.name}</p>
+                  <p className="text-xs text-green-600 mt-1">{type.tip}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         </div>
 
         {/* Summary & Actions */}
