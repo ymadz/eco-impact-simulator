@@ -276,7 +276,6 @@ export default function SimulatorPage() {
             </div>
           </div>
         </div>
-        </div>
 
         {/* Summary & Actions */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
