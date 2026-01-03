@@ -302,7 +302,7 @@ export default function ChemistryPage() {
               <select
                 value={waterBody1}
                 onChange={(e) => setWaterBody1(e.target.value)}
-                className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 outline-none"
+                className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 outline-none bg-white text-gray-900"
               >
                 {Object.entries(WATER_BODIES).map(([key, body]) => (
                   <option key={key} value={key}>
@@ -318,7 +318,7 @@ export default function ChemistryPage() {
               <select
                 value={waterBody2}
                 onChange={(e) => setWaterBody2(e.target.value)}
-                className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 outline-none"
+                className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 outline-none bg-white text-gray-900"
               >
                 {Object.entries(WATER_BODIES).map(([key, body]) => (
                   <option key={key} value={key}>
