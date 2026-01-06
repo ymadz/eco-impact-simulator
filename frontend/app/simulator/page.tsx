@@ -1,36 +1,121 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Zap, Droplets, Trash2, Calculator, Leaf, Info, Lightbulb, MapPin } from 'lucide-react';
+import { RefreshCw, Zap, Droplets, Trash2, Calculator, Leaf, Info, Lightbulb, ClipboardList, Plus } from 'lucide-react';
 import { calculateEcoScore } from '@/lib/calculations';
-import { FUN_FACTS, USAGE_ANALOGIES, WASTE_TYPES } from '@/lib/constants';
+import { FUN_FACTS } from '@/lib/constants';
 
-type LocationType = 'school' | 'house' | 'office' | 'community';
+type InputMode = 'activities' | 'manual';
+
+// Activity types with conversion rates
+const ACTIVITIES = {
+  energy: [
+    { id: 'led', name: 'LED Lights', icon: '💡', unit: 'hours', rate: 0.01 }, // 10W per hour
+    { id: 'laptop', name: 'Laptop Use', icon: '💻', unit: 'hours', rate: 0.05 }, // 50W per hour
+    { id: 'phone', name: 'Phone Charging', icon: '📱', unit: 'charges', rate: 0.015 }, // 15Wh per charge
+    { id: 'fan', name: 'Electric Fan', icon: '🌀', unit: 'hours', rate: 0.075 }, // 75W per hour
+  ],
+  water: [
+    { id: 'toilet', name: 'Toilet Flush', icon: '🚽', unit: 'flushes', rate: 6 }, // 6L per flush
+    { id: 'teeth', name: 'Brushing Teeth', icon: '🪥', unit: 'times', rate: 2 }, // 2L per session
+    { id: 'hands', name: 'Washing Hands', icon: '🧼', unit: 'times', rate: 1.5 }, // 1.5L per wash
+    { id: 'shower', name: 'Shower', icon: '🚿', unit: 'minutes', rate: 9 }, // 9L per minute
+  ],
+  waste: [
+    { id: 'paper', name: 'Paper Sheets', icon: '📄', unit: 'sheets', rate: 0.005 }, // 5g per sheet
+    { id: 'bottle', name: 'Plastic Bottles', icon: '🧴', unit: 'bottles', rate: 0.025 }, // 25g per bottle
+    { id: 'food', name: 'Food Waste', icon: '🍎', unit: 'portions', rate: 0.15 }, // 150g per portion
+    { id: 'bag', name: 'Plastic Bags', icon: '🛍️', unit: 'bags', rate: 0.008 }, // 8g per bag
+  ],
+};
+
+const PRESETS = [
+  { id: 'school', name: 'Typical School Day', icon: '🏫', electricity: 5, water: 20, waste: 2 },
+  { id: 'home', name: 'Day at Home', icon: '🏠', electricity: 10, water: 50, waste: 3 },
+  { id: 'eco', name: 'Eco-Friendly Day', icon: '🌱', electricity: 3, water: 15, waste: 1 },
+  { id: 'busy', name: 'Busy Day', icon: '⚡', electricity: 15, water: 70, waste: 4 },
+];
 
 export default function SimulatorPage() {
-  const [location, setLocation] = useState<LocationType>('school');
+  const [inputMode, setInputMode] = useState<InputMode>('activities');
+  
+  // Activity tracking state
+  const [energyActivities, setEnergyActivities] = useState<Record<string, number>>({
+    led: 0, laptop: 0, phone: 0, fan: 0,
+  });
+  const [waterActivities, setWaterActivities] = useState<Record<string, number>>({
+    toilet: 0, teeth: 0, hands: 0, shower: 0,
+  });
+  const [wasteActivities, setWasteActivities] = useState<Record<string, number>>({
+    paper: 0, bottle: 0, food: 0, bag: 0,
+  });
+
+  // Custom activities
+  const [customActivities, setCustomActivities] = useState<{
+    energy: Array<{ name: string; value: number }>;
+    water: Array<{ name: string; value: number }>;
+    waste: Array<{ name: string; value: number }>;
+  }>({
+    energy: [],
+    water: [],
+    waste: [],
+  });
+
+  // Manual input state
   const [electricity, setElectricity] = useState(5);
   const [water, setWater] = useState(20);
   const [waste, setWaste] = useState(2);
+  
   const [showResults, setShowResults] = useState(false);
   const [currentFunFact, setCurrentFunFact] = useState(FUN_FACTS[0]);
 
-  // Location-based max values
-  const locationMaxValues = {
-    school: { electricity: 50, water: 200, waste: 20 },
-    house: { electricity: 30, water: 150, waste: 10 },
-    office: { electricity: 40, water: 100, waste: 15 },
-    community: { electricity: 100, water: 500, waste: 50 },
+  // Calculate totals from activities
+  const calculateFromActivities = () => {
+    let totalElectricity = 0;
+    let totalWater = 0;
+    let totalWaste = 0;
+
+    // Energy activities
+    ACTIVITIES.energy.forEach(activity => {
+      totalElectricity += energyActivities[activity.id] * activity.rate;
+    });
+    customActivities.energy.forEach(custom => {
+      totalElectricity += custom.value;
+    });
+
+    // Water activities
+    ACTIVITIES.water.forEach(activity => {
+      totalWater += waterActivities[activity.id] * activity.rate;
+    });
+    customActivities.water.forEach(custom => {
+      totalWater += custom.value;
+    });
+
+    // Waste activities
+    ACTIVITIES.waste.forEach(activity => {
+      totalWaste += wasteActivities[activity.id] * activity.rate;
+    });
+    customActivities.waste.forEach(custom => {
+      totalWaste += custom.value;
+    });
+
+    return {
+      electricity: parseFloat(totalElectricity.toFixed(2)),
+      water: parseFloat(totalWater.toFixed(1)),
+      waste: parseFloat(totalWaste.toFixed(2)),
+    };
   };
 
-  const locationLabels = {
-    school: { name: 'School', icon: '🏫' },
-    house: { name: 'House', icon: '🏠' },
-    office: { name: 'Office', icon: '🏢' },
-    community: { name: 'Community', icon: '🏘️' },
+  // Get current values based on input mode
+  const getCurrentValues = () => {
+    if (inputMode === 'activities') {
+      return calculateFromActivities();
+    }
+    return { electricity, water, waste };
   };
 
-  const ecoResult = calculateEcoScore(electricity, water, waste);
+  const currentValues = getCurrentValues();
+  const ecoResult = calculateEcoScore(currentValues.electricity, currentValues.water, currentValues.waste);
 
   // Rotate fun facts
   useEffect(() => {
@@ -48,398 +133,533 @@ export default function SimulatorPage() {
   };
 
   const handleReset = () => {
+    setEnergyActivities({ led: 0, laptop: 0, phone: 0, fan: 0 });
+    setWaterActivities({ toilet: 0, teeth: 0, hands: 0, shower: 0 });
+    setWasteActivities({ paper: 0, bottle: 0, food: 0, bag: 0 });
+    setCustomActivities({ energy: [], water: [], waste: [] });
     setElectricity(5);
     setWater(20);
     setWaste(2);
     setShowResults(false);
   };
 
-  const getGradeColor = (grade: string) => {
-    switch (grade) {
-      case 'A': return 'text-green-600 bg-green-100';
-      case 'B': return 'text-blue-600 bg-blue-100';
-      case 'C': return 'text-yellow-600 bg-yellow-100';
-      case 'D': return 'text-orange-600 bg-orange-100';
-      default: return 'text-red-600 bg-red-100';
+  const handlePresetSelect = (preset: typeof PRESETS[0]) => {
+    setElectricity(preset.electricity);
+    setWater(preset.water);
+    setWaste(preset.waste);
+  };
+
+  const addCustomActivity = (type: 'energy' | 'water' | 'waste') => {
+    const name = prompt(`Enter custom ${type} activity name:`);
+    if (!name) return;
+
+    const valueStr = prompt(`Enter ${type === 'energy' ? 'kWh' : type === 'water' ? 'liters' : 'kg'} value:`);
+    const value = parseFloat(valueStr || '0');
+    
+    if (value > 0) {
+      setCustomActivities(prev => ({
+        ...prev,
+        [type]: [...prev[type], { name, value }],
+      }));
     }
   };
 
   return (
-    <main className="min-h-screen bg-white pt-24">
-      {/* Header */}
-      <div className="text-center mb-10">
-        <div className="flex justify-center mb-4">
-          <div className="bg-green-100 p-4 rounded-full">
-            <Leaf className="h-12 w-12 text-green-600" />
+    <div className="min-h-screen bg-gray-50 pt-24 pb-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <div className="flex justify-center mb-4">
+            <div className="bg-green-100 p-4 rounded-full">
+              <Calculator className="h-12 w-12 text-green-600" />
+            </div>
           </div>
-        </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-          <span role="img" aria-label="calculator">🧮</span> Eco-Impact Calculator
-        </h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Calculate your environmental footprint by entering your daily resource consumption
-        </p>
-        {/* Subject Integration Badge */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-          <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
-            <Info className="w-4 h-4" />
-            <span>E-Tech: Data Interpretation & Surveys</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 pb-8">
-        {/* Location Selector */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
-          <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-green-600" />
-            Select Location to Calculate Impact
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {(Object.keys(locationLabels) as LocationType[]).map((loc) => (
-              <button
-                key={loc}
-                onClick={() => setLocation(loc)}
-                className={`p-4 rounded-xl border-2 transition-all ${
-                  location === loc
-                    ? 'border-green-500 bg-green-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <div className="text-2xl mb-2">{locationLabels[loc].icon}</div>
-                <div className="font-medium text-gray-900">{locationLabels[loc].name}</div>
-                <div className="text-xs text-gray-500 mt-1">
-                  Max: {locationMaxValues[loc].electricity} kWh
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Input Section */}
-        <div className="mb-8">
-          <h2 className="font-semibold text-gray-900 mb-6 text-center">Resource Consumption for {locationLabels[location].name}</h2>
-          
-          {/* Three Column Grid for Inputs */}
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Energy Card */}
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-yellow-600" />
-                </div>
-                <h3 className="font-semibold text-gray-800">Energy</h3>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            <span role="img" aria-label="calculator">🧮</span> Eco-Impact Calculator
+          </h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Track your daily activities and see their environmental impact in real-time
+          </p>
+          {/* Subject Integration Badge */}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <div className="group relative inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-medium cursor-help">
+              <Info className="w-4 h-4" />
+              <span>E-Tech: Data Interpretation & Surveys</span>
+              {/* Tooltip */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-80 bg-gray-900 text-white text-xs rounded-lg p-3 shadow-lg z-10">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+                E-tech was integrated into this project through the use of technological tools that provide eco-impact score results based on user input on water usage, energy use, and waste production, promoting proper resource consumption daily.
               </div>
-              
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Daily Electricity Usage
-              </label>
-              <div className="flex mb-2">
+            </div>
+          </div>
+        </div>
+
+        {/* Input Mode Selector */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+          <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <ClipboardList className="h-6 w-6 text-green-600" />
+            Choose Your Input Method
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button
+              onClick={() => setInputMode('activities')}
+              className={`p-4 rounded-xl border-2 transition-all ${
+                inputMode === 'activities'
+                  ? 'border-green-500 bg-green-50'
+                  : 'border-gray-200 hover:border-green-300'
+              }`}
+            >
+              <div className="text-3xl mb-2">📋</div>
+              <div className="font-bold text-gray-800">Track Activities</div>
+              <div className="text-sm text-gray-600 mt-1">Most accurate - select what you did</div>
+            </button>
+
+            <button
+              onClick={() => setInputMode('manual')}
+              className={`p-4 rounded-xl border-2 transition-all ${
+                inputMode === 'manual'
+                  ? 'border-green-500 bg-green-50'
+                  : 'border-gray-200 hover:border-green-300'
+              }`}
+            >
+              <div className="text-3xl mb-2">✏️</div>
+              <div className="font-bold text-gray-800">Manual Input</div>
+              <div className="text-sm text-gray-600 mt-1">Quick presets or custom values</div>
+            </button>
+          </div>
+        </div>
+
+        {/* Track Activities Mode */}
+        {inputMode === 'activities' && (
+          <div className="space-y-6">
+            {/* Energy Activities */}
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <Zap className="h-7 w-7 text-yellow-600" />
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800">Energy Activities</h3>
+                  <p className="text-sm text-gray-600">
+                    Total: <span className="font-bold text-yellow-600">{currentValues.electricity.toFixed(2)} kWh</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-4">
+                {ACTIVITIES.energy.map((activity) => (
+                  <div key={activity.id} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{activity.icon}</span>
+                        <span className="font-semibold text-gray-800">{activity.name}</span>
+                      </div>
+                      <span className="text-sm text-gray-600">
+                        ≈ {(energyActivities[activity.id] * activity.rate).toFixed(3)} kWh
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="range"
+                        min="0"
+                        max="24"
+                        value={energyActivities[activity.id]}
+                        onChange={(e) =>
+                          setEnergyActivities({ ...energyActivities, [activity.id]: parseFloat(e.target.value) })
+                        }
+                        className="flex-1"
+                      />
+                      <div className="w-24 text-right">
+                        <span className="font-bold text-gray-800">{energyActivities[activity.id]}</span>
+                        <span className="text-sm text-gray-600 ml-1">{activity.unit}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* Custom Energy Activities */}
+                {customActivities.energy.map((custom, idx) => (
+                  <div key={idx} className="border border-green-300 bg-green-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">⭐</span>
+                        <span className="font-semibold text-gray-800">{custom.name}</span>
+                      </div>
+                      <span className="text-sm text-gray-600">{custom.value} kWh</span>
+                    </div>
+                  </div>
+                ))}
+
+                <button
+                  onClick={() => addCustomActivity('energy')}
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-gray-600 hover:border-green-400 hover:text-green-600 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Plus className="h-5 w-5" />
+                  Add Custom Energy Activity
+                </button>
+              </div>
+            </div>
+
+            {/* Water Activities */}
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <Droplets className="h-7 w-7 text-blue-600" />
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800">Water Activities</h3>
+                  <p className="text-sm text-gray-600">
+                    Total: <span className="font-bold text-blue-600">{currentValues.water.toFixed(1)} L</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-4">
+                {ACTIVITIES.water.map((activity) => (
+                  <div key={activity.id} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{activity.icon}</span>
+                        <span className="font-semibold text-gray-800">{activity.name}</span>
+                      </div>
+                      <span className="text-sm text-gray-600">
+                        ≈ {(waterActivities[activity.id] * activity.rate).toFixed(1)} L
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="range"
+                        min="0"
+                        max={activity.unit === 'minutes' ? 30 : 20}
+                        value={waterActivities[activity.id]}
+                        onChange={(e) =>
+                          setWaterActivities({ ...waterActivities, [activity.id]: parseFloat(e.target.value) })
+                        }
+                        className="flex-1"
+                      />
+                      <div className="w-24 text-right">
+                        <span className="font-bold text-gray-800">{waterActivities[activity.id]}</span>
+                        <span className="text-sm text-gray-600 ml-1">{activity.unit}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Custom Water Activities */}
+                {customActivities.water.map((custom, idx) => (
+                  <div key={idx} className="border border-blue-300 bg-blue-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">⭐</span>
+                        <span className="font-semibold text-gray-800">{custom.name}</span>
+                      </div>
+                      <span className="text-sm text-gray-600">{custom.value} L</span>
+                    </div>
+                  </div>
+                ))}
+
+                <button
+                  onClick={() => addCustomActivity('water')}
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Plus className="h-5 w-5" />
+                  Add Custom Water Activity
+                </button>
+              </div>
+            </div>
+
+            {/* Waste Activities */}
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <Trash2 className="h-7 w-7 text-orange-600" />
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800">Waste Activities</h3>
+                  <p className="text-sm text-gray-600">
+                    Total: <span className="font-bold text-orange-600">{currentValues.waste.toFixed(2)} kg</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-4">
+                {ACTIVITIES.waste.map((activity) => (
+                  <div key={activity.id} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{activity.icon}</span>
+                        <span className="font-semibold text-gray-800">{activity.name}</span>
+                      </div>
+                      <span className="text-sm text-gray-600">
+                        ≈ {(wasteActivities[activity.id] * activity.rate).toFixed(3)} kg
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="range"
+                        min="0"
+                        max={activity.unit === 'sheets' ? 50 : 20}
+                        value={wasteActivities[activity.id]}
+                        onChange={(e) =>
+                          setWasteActivities({ ...wasteActivities, [activity.id]: parseFloat(e.target.value) })
+                        }
+                        className="flex-1"
+                      />
+                      <div className="w-24 text-right">
+                        <span className="font-bold text-gray-800">{wasteActivities[activity.id]}</span>
+                        <span className="text-sm text-gray-600 ml-1">{activity.unit}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Custom Waste Activities */}
+                {customActivities.waste.map((custom, idx) => (
+                  <div key={idx} className="border border-orange-300 bg-orange-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">⭐</span>
+                        <span className="font-semibold text-gray-800">{custom.name}</span>
+                      </div>
+                      <span className="text-sm text-gray-600">{custom.value} kg</span>
+                    </div>
+                  </div>
+                ))}
+
+                <button
+                  onClick={() => addCustomActivity('waste')}
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-gray-600 hover:border-orange-400 hover:text-orange-600 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Plus className="h-5 w-5" />
+                  Add Custom Waste Activity
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Manual Input Mode */}
+        {inputMode === 'manual' && (
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-6">Enter Values</h3>
+            
+            {/* Quick Presets */}
+            <div className="mb-8">
+              <h4 className="text-sm font-semibold text-gray-700 mb-3">Quick Presets:</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {PRESETS.map((preset) => (
+                  <button
+                    key={preset.id}
+                    onClick={() => handlePresetSelect(preset)}
+                    className="p-4 border-2 border-gray-200 rounded-xl hover:border-green-400 hover:shadow-md transition-all text-left"
+                  >
+                    <div className="text-3xl mb-2">{preset.icon}</div>
+                    <div className="font-bold text-gray-800 text-sm mb-2">{preset.name}</div>
+                    <div className="space-y-0.5 text-xs text-gray-600">
+                      <div className="flex items-center gap-1">
+                        <Zap className="h-3 w-3 text-yellow-600" />
+                        <span>{preset.electricity} kWh</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Droplets className="h-3 w-3 text-blue-600" />
+                        <span>{preset.water} L</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Trash2 className="h-3 w-3 text-orange-600" />
+                        <span>{preset.waste} kg</span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Manual Input Fields */}
+            <div className="border-t border-gray-200 pt-6">
+              <h4 className="text-sm font-semibold text-gray-700 mb-4">Or Enter Custom Values:</h4>
+              <div className="grid gap-6">
+              {/* Electricity Input */}
+              <div>
+                <label className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
+                  <Zap className="h-5 w-5 text-yellow-600" />
+                  Electricity (kWh)
+                </label>
                 <input
                   type="number"
                   value={electricity}
-                  onChange={(e) => setElectricity(Number(e.target.value))}
+                  onChange={(e) => setElectricity(parseFloat(e.target.value) || 0)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
                   min="0"
-                  max={locationMaxValues[location].electricity}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white text-sm"
+                  step="0.1"
                 />
-                <span className="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                  kWh
-                </span>
               </div>
-              <p className="text-xs text-gray-500 mb-3">Max: {locationMaxValues[location].electricity} kWh/day</p>
-              
-              {/* Compact Reference */}
-              <div className="p-3 bg-yellow-50 rounded-lg">
-                <p className="text-xs font-medium text-yellow-800 mb-2 flex items-center gap-1">
-                  <Lightbulb className="w-3 h-3" />
-                  Quick Reference
-                </p>
-                <div className="space-y-1 text-xs text-yellow-700">
-                  {USAGE_ANALOGIES.energy.slice(0, 3).map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-1">
-                      <span>{item.icon}</span>
-                      <span className="truncate">{item.description}: {item.amount}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
 
-            {/* Water Card */}
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Droplets className="w-5 h-5 text-blue-600" />
-                </div>
-                <h3 className="font-semibold text-gray-800">Water</h3>
-              </div>
-              
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Daily Water Usage
-              </label>
-              <div className="flex mb-2">
+              {/* Water Input */}
+              <div>
+                <label className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
+                  <Droplets className="h-5 w-5 text-blue-600" />
+                  Water (Liters)
+                </label>
                 <input
                   type="number"
                   value={water}
-                  onChange={(e) => setWater(Number(e.target.value))}
+                  onChange={(e) => setWater(parseFloat(e.target.value) || 0)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
                   min="0"
-                  max={locationMaxValues[location].water}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white text-sm"
+                  step="0.1"
                 />
-                <span className="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                  Liters
-                </span>
               </div>
-              <p className="text-xs text-gray-500 mb-3">Max: {locationMaxValues[location].water} L/day</p>
-              
-              {/* Compact Reference */}
-              <div className="p-3 bg-blue-50 rounded-lg">
-                <p className="text-xs font-medium text-blue-800 mb-2 flex items-center gap-1">
-                  <Droplets className="w-3 h-3" />
-                  Quick Reference
-                </p>
-                <div className="space-y-1 text-xs text-blue-700">
-                  {USAGE_ANALOGIES.water.slice(0, 3).map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-1">
-                      <span>{item.icon}</span>
-                      <span className="truncate">{item.description}: {item.amount}L</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
 
-            {/* Waste Card */}
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Trash2 className="w-5 h-5 text-green-600" />
-                </div>
-                <h3 className="font-semibold text-gray-800">Waste</h3>
-              </div>
-              
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Daily Waste Generated
-              </label>
-              <div className="flex mb-2">
+              {/* Waste Input */}
+              <div>
+                <label className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
+                  <Trash2 className="h-5 w-5 text-orange-600" />
+                  Waste (kg)
+                </label>
                 <input
                   type="number"
                   value={waste}
-                  onChange={(e) => setWaste(Number(e.target.value))}
+                  onChange={(e) => setWaste(parseFloat(e.target.value) || 0)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
                   min="0"
-                  max={locationMaxValues[location].waste}
-                  step="0.1"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-gray-900 bg-white text-sm"
+                  step="0.01"
                 />
-                <span className="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                  kg
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 mb-3">Max: {locationMaxValues[location].waste} kg/day</p>
-              
-              {/* Compact Reference */}
-              <div className="p-3 bg-green-50 rounded-lg">
-                <p className="text-xs font-medium text-green-800 mb-2 flex items-center gap-1">
-                  <Info className="w-3 h-3" />
-                  Common Waste Types
-                </p>
-                <div className="space-y-1 text-xs text-green-700">
-                  {WASTE_TYPES.slice(0, 3).map((type) => (
-                    <div key={type.id} className="flex items-center gap-1">
-                      <span>{type.icon}</span>
-                      <span className="truncate">{type.name}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
+            </div>
           </div>
+        )}
 
-          {/* Waste Tips - Full Width Below */}
-          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
-            <h4 className="text-sm font-semibold text-green-800 mb-3 flex items-center gap-2">
-              <Info className="w-4 h-4" />
-              Reference Tips: How to Reduce Waste
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-              {WASTE_TYPES.map((type) => (
-                <div 
-                  key={type.id} 
-                  className="p-2 rounded-lg bg-white text-center"
-                >
-                  <span className="text-xl">{type.icon}</span>
-                  <p className="text-xs font-medium text-gray-800 mt-1">{type.name}</p>
-                  <p className="text-xs text-green-600 mt-1">{type.tip}</p>
-                </div>
-              ))}
+        {/* Current Summary */}
+        <div className="bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl shadow-lg p-8 text-white mt-8">
+          <h3 className="text-2xl font-bold mb-6 text-center">Your Current Impact</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white/20 backdrop-blur rounded-xl p-6 text-center">
+              <Zap className="h-10 w-10 mx-auto mb-3" />
+              <div className="text-4xl font-bold mb-1">{currentValues.electricity}</div>
+              <div className="text-sm opacity-90">kWh Electricity</div>
+            </div>
+            <div className="bg-white/20 backdrop-blur rounded-xl p-6 text-center">
+              <Droplets className="h-10 w-10 mx-auto mb-3" />
+              <div className="text-4xl font-bold mb-1">{currentValues.water}</div>
+              <div className="text-sm opacity-90">Liters Water</div>
+            </div>
+            <div className="bg-white/20 backdrop-blur rounded-xl p-6 text-center">
+              <Trash2 className="h-10 w-10 mx-auto mb-3" />
+              <div className="text-4xl font-bold mb-1">{currentValues.waste}</div>
+              <div className="text-sm opacity-90">kg Waste</div>
             </div>
           </div>
         </div>
 
-        {/* Summary & Actions */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
-          <h3 className="font-semibold text-gray-900 mb-4">Current Input Summary for {locationLabels[location].name}</h3>
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="text-center p-4 bg-yellow-50 rounded-lg">
-              <Zap className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900">{electricity}</div>
-              <div className="text-xs text-gray-500">kWh/day</div>
-            </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <Droplets className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900">{water}</div>
-              <div className="text-xs text-gray-500">Liters/day</div>
-            </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <Trash2 className="w-6 h-6 text-green-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900">{waste}</div>
-              <div className="text-xs text-gray-500">kg/day</div>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <button
-              onClick={handleCalculate}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-            >
-              <Calculator className="w-5 h-5" />
-              Calculate Impact
-            </button>
-            <button
-              onClick={handleReset}
-              className="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2"
-            >
-              <RefreshCw className="w-5 h-5" />
-              Reset
-            </button>
-          </div>
+        {/* Action Buttons */}
+        <div className="flex gap-4 justify-center mt-8">
+          <button
+            onClick={handleCalculate}
+            className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl"
+          >
+            <Calculator className="h-5 w-5" />
+            Calculate Impact
+          </button>
+          <button
+            onClick={handleReset}
+            className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all"
+          >
+            <RefreshCw className="h-5 w-5" />
+            Reset
+          </button>
         </div>
 
-        {/* Results */}
+        {/* Results Section */}
         {showResults && (
-          <div className="space-y-6">
-            {/* Eco Score Result */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Your Eco-Impact Score for {locationLabels[location].name}</h3>
-              
-              <div className="flex items-center gap-6 mb-6">
-                <div className={`w-24 h-24 rounded-full flex items-center justify-center ${getGradeColor(ecoResult.grade)}`}>
-                  <span className="text-4xl font-bold">{ecoResult.grade}</span>
+          <div className="mt-12 space-y-6 animate-fade-in">
+            {/* Eco Score Card */}
+            <div className="bg-white rounded-2xl shadow-2xl p-8 border-4 border-green-500">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-24 h-24 bg-green-100 rounded-full mb-4">
+                  <Leaf className="h-12 w-12 text-green-600" />
                 </div>
-                <div>
-                  <div className="text-3xl font-bold text-gray-900 mb-1">{ecoResult.score} points</div>
-                  <p className="text-gray-600">{ecoResult.message}</p>
+                <h3 className="text-3xl font-bold text-gray-800 mb-2">Your Eco-Score</h3>
+                <div className={`text-7xl font-bold ${
+                  ecoResult.grade === 'A' ? 'text-green-600' :
+                  ecoResult.grade === 'B' ? 'text-blue-600' :
+                  ecoResult.grade === 'C' ? 'text-yellow-600' :
+                  ecoResult.grade === 'D' ? 'text-orange-600' :
+                  'text-red-600'
+                } mb-2`}>
+                  {ecoResult.score}
+                </div>
+                <div className={`inline-block text-2xl font-bold px-6 py-2 rounded-full ${
+                  ecoResult.grade === 'A' ? 'bg-green-100 text-green-700' :
+                  ecoResult.grade === 'B' ? 'bg-blue-100 text-blue-700' :
+                  ecoResult.grade === 'C' ? 'bg-yellow-100 text-yellow-700' :
+                  ecoResult.grade === 'D' ? 'bg-orange-100 text-orange-700' :
+                  'bg-red-100 text-red-700'
+                }`}>
+                  Grade: {ecoResult.grade}
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-xl p-6 mb-6">
+                <p className="text-gray-700 text-center text-lg">{ecoResult.message}</p>
+              </div>
+
+              {/* Breakdown */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-yellow-50 rounded-lg p-4 border-l-4 border-yellow-500">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Zap className="h-5 w-5 text-yellow-600" />
+                    <span className="font-semibold text-gray-800">Energy</span>
+                  </div>
+                  <div className="text-2xl font-bold text-yellow-700">{currentValues.electricity} kWh</div>
+                  <div className="text-sm text-gray-600 mt-1">{ecoResult.breakdown.energy}</div>
+                </div>
+
+                <div className="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-500">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Droplets className="h-5 w-5 text-blue-600" />
+                    <span className="font-semibold text-gray-800">Water</span>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-700">{currentValues.water} L</div>
+                  <div className="text-sm text-gray-600 mt-1">{ecoResult.breakdown.water}</div>
+                </div>
+
+                <div className="bg-orange-50 rounded-lg p-4 border-l-4 border-orange-500">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Trash2 className="h-5 w-5 text-orange-600" />
+                    <span className="font-semibold text-gray-800">Waste</span>
+                  </div>
+                  <div className="text-2xl font-bold text-orange-700">{currentValues.waste} kg</div>
+                  <div className="text-sm text-gray-600 mt-1">{ecoResult.breakdown.waste}</div>
                 </div>
               </div>
 
-              {/* Score Breakdown */}
-              <div className="space-y-4 pt-4 border-t border-gray-100">
-                <h4 className="text-sm font-medium text-gray-700">Impact Breakdown</h4>
-                
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Electricity</span>
-                    <span className="font-medium">{electricity * 5} points</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-yellow-500 h-2 rounded-full transition-all"
-                      style={{ width: `${Math.min((electricity / locationMaxValues[location].electricity) * 100, 100)}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Water</span>
-                    <span className="font-medium">{water * 2} points</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-500 h-2 rounded-full transition-all"
-                      style={{ width: `${Math.min((water / locationMaxValues[location].water) * 100, 100)}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Waste</span>
-                    <span className="font-medium">{waste * 10} points</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-green-500 h-2 rounded-full transition-all"
-                      style={{ width: `${Math.min((waste / locationMaxValues[location].waste) * 100, 100)}%` }}
-                    />
-                  </div>
-                </div>
+              {/* Recommendations */}
+              <div className="bg-green-50 rounded-xl p-6">
+                <h4 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                  <Lightbulb className="h-5 w-5 text-green-600" />
+                  Recommendations for Improvement
+                </h4>
+                <ul className="space-y-2">
+                  {ecoResult.recommendations.map((rec, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-gray-700">
+                      <span className="text-green-600 mt-1">•</span>
+                      <span>{rec}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
-            {/* Tips */}
-            <div className="bg-green-50 border border-green-200 rounded-xl p-6">
-              <h3 className="font-semibold text-green-800 mb-3">Recommendations</h3>
-              <ul className="space-y-2 text-sm text-green-700">
-                {electricity > 10 && (
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-600">•</span>
-                    Turn off lights and unplug devices when not in use to reduce electricity consumption.
-                  </li>
-                )}
-                {water > 50 && (
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-600">•</span>
-                    Fix leaky faucets and take shorter showers to conserve water.
-                  </li>
-                )}
-                {waste > 5 && (
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-600">•</span>
-                    Separate recyclables and compost food waste to reduce landfill contribution.
-                  </li>
-                )}
-                {ecoResult.grade === 'A' && (
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-600">•</span>
-                    Excellent work! Share your eco-friendly habits with others.
-                  </li>
-                )}
-                {(electricity <= 10 && water <= 50 && waste <= 5) && ecoResult.grade !== 'A' && (
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-600">•</span>
-                    Good progress! Small improvements can help you reach an A grade.
-                  </li>
-                )}
-              </ul>
-            </div>
-
-            {/* Fun Fact Section - E-Tech Integration */}
-            <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl p-6 text-white">
+            {/* Fun Fact */}
+            <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl shadow-lg p-6 text-white">
               <div className="flex items-start gap-4">
-                <div className="bg-white/20 p-3 rounded-full">
-                  <Lightbulb className="w-6 h-6" />
+                <div className="bg-white/20 backdrop-blur rounded-full p-3">
+                  <Lightbulb className="h-6 w-6" />
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-semibold text-lg">Did You Know?</h3>
-                    <span className="text-xs bg-white/20 px-2 py-1 rounded-full">E-Tech Fun Fact</span>
-                  </div>
-                  <p className="text-purple-100 text-lg mb-2">{currentFunFact.icon} {currentFunFact.fact}</p>
-                  <p className="text-xs text-purple-200">Source: {currentFunFact.source}</p>
+                  <h4 className="font-bold text-lg mb-2">Did You Know?</h4>
+                  <p className="text-white/90">{typeof currentFunFact === 'string' ? currentFunFact : currentFunFact.fact}</p>
                 </div>
-              </div>
-              <div className="mt-4 pt-4 border-t border-white/20">
-                <p className="text-xs text-purple-200 flex items-center gap-2">
-                  <Info className="w-4 h-4" />
-                  Fun facts rotate every 8 seconds to help you learn while you explore!
-                </p>
               </div>
             </div>
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

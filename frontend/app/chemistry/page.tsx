@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FlaskConical, AlertTriangle, Calculator, Beaker } from 'lucide-react';
+import { FlaskConical, AlertTriangle, Calculator, Beaker, Info } from 'lucide-react';
 import PollutionTank from '@/components/PollutionTank';
 import { calculateConcentration, WATER_BODIES, POLLUTANTS } from '@/lib/calculations';
 
@@ -55,6 +55,18 @@ export default function ChemistryPage() {
           <p className="text-gray-600 max-w-2xl mx-auto">
             Learn about concentration, dilution, and environmental impact through interactive experiments!
           </p>
+          {/* Subject Integration Badge */}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <div className="group relative inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium cursor-help">
+              <Info className="w-4 h-4" />
+              <span>Chemistry: Environmental Impact Analysis</span>
+              {/* Tooltip */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-80 bg-gray-900 text-white text-xs rounded-lg p-3 shadow-lg z-10">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+                Chemistry was integrated into this website through the addition of a percent-by-weight calculator and water body comparison feature that allows users to input specific values to determine the environmental impact of pollutants.
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}
