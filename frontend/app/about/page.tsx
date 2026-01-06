@@ -1,14 +1,39 @@
-import { Leaf, Target, BookOpen, Users, Code, User } from 'lucide-react';
+import { Leaf, Target, BookOpen, Users, Code, User, Info } from 'lucide-react';
+import Image from 'next/image';
 
 export default function AboutPage() {
-  // Team members placeholder data
+  // Team members data
   const teamMembers = [
-    { name: 'Team Member 1', role: 'Role / Position', image: null },
-    { name: 'Team Member 2', role: 'Role / Position', image: null },
-    { name: 'Team Member 3', role: 'Role / Position', image: null },
-    { name: 'Team Member 4', role: 'Role / Position', image: null },
-    { name: 'Team Member 5', role: 'Role / Position', image: null },
-    { name: 'Team Member 6', role: 'Role / Position', image: null },
+    { 
+      name: 'Ali, Alia', 
+      role: 'Project Lead and Website Concept Developer',
+      image: '/team/alia.jpg'
+    },
+    { 
+      name: 'Abing, Maybelle', 
+      role: 'Data Interpretation and Content Organization',
+      image: '/team/maybelle.jpg'
+    },
+    { 
+      name: 'Maca-alin, Sheena', 
+      role: 'Survey Development and Content Verification',
+      image: '/team/sheena.jpg'
+    },
+    { 
+      name: 'Tabuelog, Hayden', 
+      role: 'Data Analyst and Project Drafting Lead',
+      image: '/team/hayden.jpg'
+    },
+    { 
+      name: 'Ogoc, Jeshua', 
+      role: 'Lead Mathematical Analyst',
+      image: '/team/jeshua.jpg'
+    },
+    { 
+      name: 'Yahya, Maha', 
+      role: 'Content Writer and Subject Integration Editor',
+      image: '/team/maha.jpg'
+    },
   ];
 
   return (
@@ -25,8 +50,7 @@ export default function AboutPage() {
             About This Project
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Eco-Impact Simulator: School Edition is an educational web application 
-            designed to help students understand and reduce their environmental impact.
+            Eco-Impact Simulator: School Edition is a web-based tool that lets students explore, measure, and reduce their impact on the environment.
           </p>
         </div>
 
@@ -37,39 +61,42 @@ export default function AboutPage() {
             Introduction
           </h2>
           <p className="text-gray-600 leading-relaxed">
-            A complete and clean school environment is essential for students as they are 
-            needed for the entirety of their well-being, daily lives and overall education. 
-            However, schools suffer from the usage and consumption of these resources, 
-            especially when they house a significant number of students. This project aims 
-            to promote an idea that highlights the daily consumption and generation of waste 
-            in the school, to spread awareness and recommend solutions in order to support 
-            the safety of our ecosystem.
+            A complete and clean school environment i mb-4">
+            The Eco-impact Simulator: School Edition turns real-world environmental problems into interactive learning. 
+            Students can explore how waste, energy, and water use affect the environment, while Chemistry calculators 
+            show how everyday substances can become harmful over time.
+          </p>
+          <p className="text-gray-600 leading-relaxed">
+            Thanks to Empowerment Technology (E-Tech), the website lets users track their habits and see their 
+            Eco-Impact Score, a simple number that shows the effect of their consumption. It also includes a DRRR 
+            module to help identify and report hazards easily.
           </p>
         </section>
 
-        {/* Problem Statement */}
-        <section className="bg-red-50 border border-red-200 p-8 rounded-2xl mb-8">
-          <h2 className="text-2xl font-bold text-red-800 mb-4">
-            ⚠️ Problem Statement
+        {/* Objectives Section */}
+        <section className="bg-blue-50 border border-blue-200 p-8 rounded-2xl mb-8">
+          <h2 className="text-2xl font-bold text-blue-800 mb-6">
+            🎯 Objectives
           </h2>
-          <p className="text-red-700 leading-relaxed">
-            Our school experiences issues regarding water, material and electricity 
-            consumption as well as the waste that gets generated from the consumption 
-            of these products. These problems not only contribute to damage that affects 
-            our environment, but also health risks from unsafe and non-sterile environmental 
-            concerns.
-          </p>
-        </section>
-
-        {/* Objectives */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="font-bold text-blue-900 mb-2">Background</h3>
+              <p className="text-blue-700 leading-relaxed">
+                Pollution and disaster risks often go unnoticed in schools and communities. E-Tech allows the 
+                simulator to combine Chemistry tools, hazard reporting, and Eco-Impact scoring in one platform. 
+                Users can see how small actions add up to real environmental effects.
+            Concept */}
         <section className="bg-white p-8 rounded-2xl shadow-lg mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
             <Target className="h-6 w-6 text-green-600" />
-            Objectives
+            Concept
           </h2>
-          <div className="space-y-4">
-            {[
-              'Increase the awareness of the effects of excessive resource consumption.',
+          <p className="text-gray-600 leading-relaxed">
+            The Eco-Impact Simulator integrates multiple academic subjects into one interactive platform. 
+            Students can calculate their resource consumption, understand chemical pollution through 
+            concentration formulas, and report environmental hazards—all while seeing real-time feedback 
+            on their ecological footprint.
+          </pIncrease the awareness of the effects of excessive resource consumption.',
               'Encourage students and school employees to minimize daily consumption of these resources.',
               'To monitor the estimated highest consumption daily in order to prepare mitigation measures for efficiency.',
               'Promote creativity by solutions and ideas that students and employees can participate in making.',
@@ -87,38 +114,45 @@ export default function AboutPage() {
         {/* Academic Integration */}
         <section className="bg-white p-8 rounded-2xl shadow-lg mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <Code className="h-6 w-6 text-green-600" />
-            Academic Integration
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="px-4 py-3 text-left font-bold text-gray-800">Subject</th>
-                  <th className="px-4 py-3 text-left font-bold text-gray-800">Feature</th>
-                  <th className="px-4 py-3 text-left font-bold text-gray-800">Concept</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr>
-                  <td className="px-4 py-3 text-gray-600">E-Tech</td>
-                  <td className="px-4 py-3 text-gray-600">Web Interface</td>
-                  <td className="px-4 py-3 text-gray-600">UX/UI Design, JavaScript, Interactive State</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-gray-600">Chemistry</td>
-                  <td className="px-4 py-3 text-gray-600">Pollution Lab</td>
-                  <td className="px-4 py-3 text-gray-600">Concentration (%wt, C=n/V), Dilution</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-gray-600">DRRR</td>
-                  <td className="px-4 py-3 text-gray-600">Safety Center</td>
-                  <td className="px-4 py-3 text-gray-600">Hazard Identification, Risk Reduction</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-gray-600">Statistics</td>
-                  <td className="px-4 py-3 text-gray-600">Survey Insights</td>
-                  <td className="px-4 py-3 text-gray-600">Data Aggregation, Trends Analysis</td>
+            <Code classNamspace-y-4">
+            {[
+              {
+                subject: 'E-Tech',
+                color: 'purple',
+                description: 'E-tech was integrated into this project through the use of technological tools that provide eco-impact score results based on user input on water usage, energy use, and waste production, promoting proper resource consumption daily.'
+              },
+              {
+                subject: 'Chemistry',
+                color: 'blue',
+                description: 'Chemistry was integrated into this website through the addition of a percent-by-weight calculator and water body comparison feature that allows users to input specific values to determine the environmental impact of pollutants.'
+              },
+              {
+                subject: 'DRRR',
+                color: 'red',
+                description: 'Disaster Risk Reduction was integrated through key concepts such as mitigation and preparedness. Users are allowed to report specific types of hazards and receive safety tips along with a checklist of essential necessities.'
+              },
+              {
+                subject: 'Statistics',
+                color: 'green',
+                description: 'Statistics was integrated into this website through the collection and analysis of survey data about resource consumption, relating to probability distributions and patterns.'
+              }
+            ].map((item, index) => (
+              <div key={index} className="group relative">
+                <div className={`p-4 rounded-xl border-2 border-${item.color}-200 bg-${item.color}-50 hover:shadow-md transition-all`}>
+                  <div className="flex items-start gap-3">
+                    <div className={`w-10 h-10 rounded-full bg-${item.color}-500 flex items-center justify-center flex-shrink-0`}>
+                      <Info className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className={`font-bold text-${item.color}-900 mb-2`}>{item.subject}</h3>
+                      <p className={`text-sm text-${item.color}-700 leading-relaxed`}>
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}d className="px-4 py-3 text-gray-600">Data Aggregation, Trends Analysis</td>
                 </tr>
               </tbody>
             </table>
@@ -163,13 +197,15 @@ export default function AboutPage() {
               <span>•</span>
               This project does not cover creation and innovation of new revolutionary products.
             </li>
-            <li className="flex items-start gap-2">
-              <span>•</span>
-              Cannot provide precise data of daily consumption - uses hypothetical simulations.
+            <lCannot provide precise real-time data - relies on estimated calculations and user input.
             </li>
             <li className="flex items-start gap-2">
               <span>•</span>
-              Focuses on minimizing waste generation, not complete elimination.
+              Focuses on awareness and education rather than enforcement or policy change.
+            </li>
+            <li className="flex items-start gap-2">
+              <span>•</span>
+              Limited to school environment contexts and common household pollutants.
             </li>
           </ul>
         </section>
@@ -181,11 +217,10 @@ export default function AboutPage() {
           </h2>
           <div className="space-y-4">
             {[
-              'Improved awareness and involvement of all consumers to minimize waste generation and protect the environment together.',
-              'Stronger school relationship and unity as one community.',
-              'Practical application of LSA Virtues and SDGs in daily life.',
-            ].map((outcome, index) => (
-              <div key={index} className="flex gap-3 items-start bg-green-50 p-4 rounded-xl">
+              'A functional and informative sustainability website',
+              'Increased awareness of personal resource consumption',
+              'Improved understanding of environmental impact among users',
+              'A strong demonstration of subject integration and advocacy0 p-4 rounded-xl">
                 <span className="text-green-600 text-xl">✓</span>
                 <p className="text-gray-700">{outcome}</p>
               </div>
@@ -194,22 +229,24 @@ export default function AboutPage() {
         </section>
 
         {/* Team Members */}
-        <section className="bg-white p-8 rounded-2xl shadow-lg">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <Users className="h-6 w-6 text-green-600" />
-            Our Team
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Meet the dedicated team behind the Eco-Impact Simulator project.
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+        <section className="bg-white p-8 1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {teamMembers.map((member, index) => (
-              <div key={index} className="text-center">
-                <div className="w-24 h-24 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center border-2 border-gray-200">
-                  {member.image ? (
-                    <img 
-                      src={member.image} 
-                      alt={member.name}
+              <div key={index} className="bg-gray-50 p-6 rounded-xl hover:shadow-md transition-shadow">
+                <div className="w-32 h-32 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center border-4 border-white shadow-lg overflow-hidden">
+                  <Image 
+                    src={member.image} 
+                    alt={member.name}
+                    width={128}
+                    height={128}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.parentElement!.innerHTML = '<svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>';
+                    }}
+                  />
+                </div>
+                <h3 className="font-bold text-gray-800 text-center mb-2">{member.name}</h3>
+                <p className="text-sm text-gray-600 text-center leading-snug
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (

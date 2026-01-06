@@ -395,6 +395,26 @@ export default function ChemistryPage() {
         </>
         ) : (
           <>
+        {/* Water Body Explanation */}
+        <div className="bg-white p-6 rounded-2xl shadow-lg mb-8 max-w-3xl mx-auto">
+          <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <Beaker className="h-5 w-5 text-cyan-500" />
+            Why Volume Matters
+          </h2>
+          <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+            The <strong>water body comparison feature</strong> demonstrates a critical environmental principle: 
+            the same amount of pollutant creates vastly different concentrations depending on the water volume. 
+            This helps students understand why dumping chemicals in small streams is more harmful than in large rivers.
+          </p>
+          <div className="bg-cyan-50 p-4 rounded-xl">
+            <p className="text-cyan-700 text-sm">
+              <strong>Real-world application:</strong> A single bottle of detergent might be "diluted enough" in a river, 
+              but catastrophic for a small canal—teaching students that environmental impact depends on both quantity 
+              <em> and context</em>.
+            </p>
+          </div>
+        </div>
+        
         {/* Comparison Controls */}
         <div className="bg-white p-6 rounded-2xl shadow-lg mb-8">
           <h3 className="font-bold text-gray-800 mb-6">Experiment Controls</h3>
