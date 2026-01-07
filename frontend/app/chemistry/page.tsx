@@ -218,29 +218,35 @@ export default function ChemistryPage() {
                 <div className={`p-6 rounded-2xl border-4 shadow-xl transition-all duration-500 ${
                   Number(calculatePercentWeight()) === 0 
                     ? 'border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100' 
-                    : Number(calculatePercentWeight()) < 10 
+                    : Number(calculatePercentWeight()) <= 0.1 
                       ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-100' 
-                      : Number(calculatePercentWeight()) < 30 
+                      : Number(calculatePercentWeight()) <= 1 
                         ? 'border-yellow-500 bg-gradient-to-br from-yellow-50 to-orange-100' 
-                        : 'border-red-500 bg-gradient-to-br from-red-50 to-rose-100'
+                        : Number(calculatePercentWeight()) <= 10
+                          ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100'
+                          : 'border-red-600 bg-gradient-to-br from-red-50 to-rose-100'
                 }`}>
                   <div className="text-center mb-4">
                     <div className={`inline-block px-6 py-2 rounded-full font-bold text-sm shadow-md ${
                       Number(calculatePercentWeight()) === 0 
                         ? 'bg-gray-200 text-gray-700' 
-                        : Number(calculatePercentWeight()) < 10 
+                        : Number(calculatePercentWeight()) <= 0.1 
                           ? 'bg-green-500 text-white' 
-                          : Number(calculatePercentWeight()) < 30 
+                          : Number(calculatePercentWeight()) <= 1 
                             ? 'bg-yellow-500 text-white' 
-                            : 'bg-red-500 text-white'
+                            : Number(calculatePercentWeight()) <= 10
+                              ? 'bg-orange-500 text-white'
+                              : 'bg-red-600 text-white'
                     }`}>
                       {Number(calculatePercentWeight()) === 0 
                         ? '⚪ EMPTY' 
-                        : Number(calculatePercentWeight()) < 10 
+                        : Number(calculatePercentWeight()) <= 0.1 
                           ? '🟢 SAFE' 
-                          : Number(calculatePercentWeight()) < 30 
+                          : Number(calculatePercentWeight()) <= 1 
                             ? '🟡 MODERATE' 
-                            : '🔴 DANGER'}
+                            : Number(calculatePercentWeight()) <= 10
+                              ? '🟠 HAZARDOUS'
+                              : '🔴 EXTREMELY HAZARDOUS'}
                     </div>
                     <div className="mt-2 text-2xl font-bold text-gray-800">
                       {calculatePercentWeight()}%
@@ -271,11 +277,13 @@ export default function ChemistryPage() {
                         className={`absolute bottom-0 w-full transition-all duration-700 ease-out ${
                           Number(calculatePercentWeight()) === 0 
                             ? 'bg-transparent' 
-                            : Number(calculatePercentWeight()) < 10 
+                            : Number(calculatePercentWeight()) <= 0.1 
                               ? 'bg-gradient-to-t from-green-500 via-green-400 to-green-300' 
-                              : Number(calculatePercentWeight()) < 30 
+                              : Number(calculatePercentWeight()) <= 1 
                                 ? 'bg-gradient-to-t from-yellow-500 via-yellow-400 to-yellow-300' 
-                                : 'bg-gradient-to-t from-red-500 via-red-400 to-red-300'
+                                : Number(calculatePercentWeight()) <= 10
+                                  ? 'bg-gradient-to-t from-orange-500 via-orange-400 to-orange-300'
+                                  : 'bg-gradient-to-t from-red-600 via-red-500 to-red-400'
                         }`}
                         style={{ 
                           height: `${Math.min(100, Number(calculatePercentWeight()))}%`,
@@ -292,11 +300,13 @@ export default function ChemistryPage() {
                           <div
                             key={i}
                             className={`absolute rounded-full shadow-lg ${
-                              Number(calculatePercentWeight()) < 10 
+                              Number(calculatePercentWeight()) <= 0.1 
                                 ? 'bg-green-700' 
-                                : Number(calculatePercentWeight()) < 30 
+                                : Number(calculatePercentWeight()) <= 1 
                                   ? 'bg-yellow-700' 
-                                  : 'bg-red-700'
+                                  : Number(calculatePercentWeight()) <= 10
+                                    ? 'bg-orange-700'
+                                    : 'bg-red-800'
                             }`}
                             style={{
                               width: `${4 + (i % 3) * 2}px`,
@@ -344,64 +354,80 @@ export default function ChemistryPage() {
         {massSolute > 0 && massSolution > 0 && (
           <div className="mb-8">
             <div className={`p-6 rounded-2xl border-4 ${
-              Number(calculatePercentWeight()) < 10 
+              Number(calculatePercentWeight()) <= 0.1 
                 ? 'border-green-500 bg-green-50' 
-                : Number(calculatePercentWeight()) < 30 
+                : Number(calculatePercentWeight()) <= 1 
                   ? 'border-yellow-500 bg-yellow-50' 
-                  : 'border-red-500 bg-red-50'
+                  : Number(calculatePercentWeight()) <= 10
+                    ? 'border-orange-500 bg-orange-50'
+                    : 'border-red-600 bg-red-50'
             }`}>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className={`text-sm font-medium ${
-                    Number(calculatePercentWeight()) < 10 
+                    Number(calculatePercentWeight()) <= 0.1 
                       ? 'text-green-800' 
-                      : Number(calculatePercentWeight()) < 30 
+                      : Number(calculatePercentWeight()) <= 1 
                         ? 'text-yellow-800' 
-                        : 'text-red-800'
+                        : Number(calculatePercentWeight()) <= 10
+                          ? 'text-orange-800'
+                          : 'text-red-800'
                   }`}>Pollutant:</span>
                   <span className={`font-bold ${
-                    Number(calculatePercentWeight()) < 10 
+                    Number(calculatePercentWeight()) <= 0.1 
                       ? 'text-green-900' 
-                      : Number(calculatePercentWeight()) < 30 
+                      : Number(calculatePercentWeight()) <= 1 
                         ? 'text-yellow-900' 
-                        : 'text-red-900'
-                  }`}>{massSolute}g in {massSolution}g solution</span>
+                        : Number(calculatePercentWeight()) <= 10
+                          ? 'text-orange-900'
+                          : 'text-red-900'
+                  }`}>{massSolute}{massUnit} in {massSolution}{massUnit} solution</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className={`text-sm font-medium ${
-                    Number(calculatePercentWeight()) < 10 
+                    Number(calculatePercentWeight()) <= 0.1 
                       ? 'text-green-800' 
-                      : Number(calculatePercentWeight()) < 30 
+                      : Number(calculatePercentWeight()) <= 1 
                         ? 'text-yellow-800' 
-                        : 'text-red-800'
+                        : Number(calculatePercentWeight()) <= 10
+                          ? 'text-orange-800'
+                          : 'text-red-800'
                   }`}>Concentration:</span>
                   <span className={`font-bold ${
-                    Number(calculatePercentWeight()) < 10 
+                    Number(calculatePercentWeight()) <= 0.1 
                       ? 'text-green-900' 
-                      : Number(calculatePercentWeight()) < 30 
+                      : Number(calculatePercentWeight()) <= 1 
                         ? 'text-yellow-900' 
-                        : 'text-red-900'
+                        : Number(calculatePercentWeight()) <= 10
+                          ? 'text-orange-900'
+                          : 'text-red-900'
                   }`}>{calculatePercentWeight()}% by weight</span>
                 </div>
                 <div className={`pt-3 border-t ${
-                  Number(calculatePercentWeight()) < 10 
+                  Number(calculatePercentWeight()) <= 0.1 
                     ? 'border-green-200' 
-                    : Number(calculatePercentWeight()) < 30 
+                    : Number(calculatePercentWeight()) <= 1 
                       ? 'border-yellow-200' 
-                      : 'border-red-200'
+                      : Number(calculatePercentWeight()) <= 10
+                        ? 'border-orange-200'
+                        : 'border-red-200'
                 }`}>
                   <p className={`text-sm ${
-                    Number(calculatePercentWeight()) < 10 
+                    Number(calculatePercentWeight()) <= 0.1 
                       ? 'text-green-700' 
-                      : Number(calculatePercentWeight()) < 30 
+                      : Number(calculatePercentWeight()) <= 1 
                         ? 'text-yellow-700' 
-                        : 'text-red-700'
+                        : Number(calculatePercentWeight()) <= 10
+                          ? 'text-orange-700'
+                          : 'text-red-700'
                   }`}>
-                    {Number(calculatePercentWeight()) < 10 
-                      ? 'Safe levels - Minimal environmental impact' 
-                      : Number(calculatePercentWeight()) < 30 
-                        ? 'Moderate concentration - Some impact on aquatic life' 
-                        : 'High concentration - Significant environmental damage'}
+                    {Number(calculatePercentWeight()) <= 0.1 
+                      ? 'Safe levels - Low concentration, generally safe in typical water systems' 
+                      : Number(calculatePercentWeight()) <= 1 
+                        ? 'Moderate - Pollutant is noticeable and may begin affecting aquatic life' 
+                        : Number(calculatePercentWeight()) <= 10
+                          ? 'Hazardous - High concentration, potentially harmful to aquatic ecosystems'
+                          : 'Extremely Hazardous - Extraordinarily high concentration, severe environmental damage likely'}
                   </p>
                 </div>
               </div>
