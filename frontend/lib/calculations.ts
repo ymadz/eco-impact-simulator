@@ -5,6 +5,12 @@ export interface EcoResult {
   color: string;
   bgColor: string;
   message: string;
+  breakdown: {
+    energy: string;
+    water: string;
+    waste: string;
+  };
+  recommendations: string[];
 }
 
 export const calculateEcoScore = (
@@ -19,35 +25,92 @@ export const calculateEcoScore = (
   let color: string;
   let bgColor: string;
   let message: string;
+  let breakdown: { energy: string; water: string; waste: string };
+  let recommendations: string[];
 
   if (score <= 50) {
     grade = 'A';
     color = 'text-green-600';
     bgColor = 'bg-green-500';
     message = 'Excellent! Your eco-impact is minimal. Keep up the great habits!';
+    breakdown = {
+      energy: 'Low usage - Excellent!',
+      water: 'Minimal consumption',
+      waste: 'Very eco-friendly'
+    };
+    recommendations = [
+      'Share your eco-friendly habits with others',
+      'Consider renewable energy sources',
+      'Continue monitoring your consumption'
+    ];
   } else if (score <= 80) {
     grade = 'B';
     color = 'text-lime-600';
     bgColor = 'bg-lime-500';
     message = 'Good job! Your consumption is within acceptable limits.';
+    breakdown = {
+      energy: 'Moderate usage - Good!',
+      water: 'Acceptable levels',
+      waste: 'Room for improvement'
+    };
+    recommendations = [
+      'Turn off lights when not in use',
+      'Reduce water usage during showers',
+      'Increase recycling efforts'
+    ];
   } else if (score <= 100) {
     grade = 'C';
     color = 'text-yellow-600';
     bgColor = 'bg-yellow-500';
     message = 'Moderate impact. Consider reducing your resource usage.';
+    breakdown = {
+      energy: 'Higher than average',
+      water: 'Could be reduced',
+      waste: 'Needs attention'
+    };
+    recommendations = [
+      'Switch to energy-efficient appliances',
+      'Fix any leaking taps',
+      'Separate recyclables from trash',
+      'Reduce single-use plastics'
+    ];
   } else if (score <= 150) {
     grade = 'D';
     color = 'text-orange-600';
     bgColor = 'bg-orange-500';
     message = 'High impact! Your consumption needs attention.';
+    breakdown = {
+      energy: 'Significantly high',
+      water: 'Excessive usage',
+      waste: 'Major concern'
+    };
+    recommendations = [
+      'Unplug unused electronics',
+      'Take shorter showers',
+      'Compost organic waste',
+      'Avoid disposable products',
+      'Use reusable bags and bottles'
+    ];
   } else {
     grade = 'F';
     color = 'text-red-600';
     bgColor = 'bg-red-500';
     message = 'Critical! Immediate action required to reduce consumption.';
+    breakdown = {
+      energy: 'Critically high',
+      water: 'Unsustainable levels',
+      waste: 'Urgent action needed'
+    };
+    recommendations = [
+      'Conduct an energy audit',
+      'Install water-saving devices',
+      'Start a comprehensive recycling program',
+      'Reduce, reuse, recycle everything possible',
+      'Seek professional environmental advice'
+    ];
   }
 
-  return { score, grade, color, bgColor, message };
+  return { score, grade, color, bgColor, message, breakdown, recommendations };
 };
 
 // Limit Projection Calculation (Calculus)

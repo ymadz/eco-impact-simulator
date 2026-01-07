@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Shield, AlertTriangle, CheckCircle, BookOpen } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, BookOpen, Info } from 'lucide-react';
 import HazardForm from '@/components/HazardForm';
 import { HAZARD_TYPES } from '@/lib/constants';
 
@@ -25,6 +25,18 @@ export default function DRRRPage() {
             Disaster Risk Reduction and Readiness. Practice identifying hazards, report 
             potential risks, and learn safety tips for emergency preparedness.
           </p>
+          {/* Subject Integration Badge */}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <div className="group relative inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-sm font-medium cursor-help">
+              <Info className="w-4 h-4" />
+              <span>DRRR: Hazard Identification & Emergency Response</span>
+              {/* Tooltip */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-80 bg-gray-900 text-white text-xs rounded-lg p-3 shadow-lg z-10">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+                Disaster Risk Reduction was integrated through key concepts such as mitigation and preparedness. Users are allowed to report specific types of hazards and receive safety tips along with a checklist of essential necessities.
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}

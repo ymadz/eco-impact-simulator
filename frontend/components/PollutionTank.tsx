@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { ConcentrationResult } from '@/lib/calculations';
 
 interface PollutionTankProps {
@@ -9,12 +10,29 @@ interface PollutionTankProps {
   amount: number;
 }
 
+interface Particle {
+  left: number;
+  top: number;
+  delay: number;
+}
+
 export default function PollutionTank({
   result,
   waterBodyName,
   pollutantName,
   amount,
 }: PollutionTankProps) {
+  const [particles, setParticles] = useState<Particle[]>([]);
+
+  // Generate particles only on client side to avoid hydration mismatch
+  useEffect(() => {
+    const newParticles = [...Array(10)].map(() => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 2,
+    }));
+    setParticles(newParticles);
+  }, []);
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'safe':
@@ -69,14 +87,14 @@ export default function PollutionTank({
         >
           {/* Pollution particles animation */}
           <div className="absolute inset-0 overflow-hidden">
-            {[...Array(10)].map((_, i) => (
+            {particles.map((particle, i) => (
               <div
                 key={i}
                 className="absolute w-2 h-2 bg-gray-800 rounded-full animate-float"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 2}s`,
+                  left: `${particle.left}%`,
+                  top: `${particle.top}%`,
+                  animationDelay: `${particle.delay}s`,
                   opacity: result.opacity * 0.5,
                 }}
               />
