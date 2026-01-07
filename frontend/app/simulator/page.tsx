@@ -287,14 +287,6 @@ export default function SimulatorPage() {
                     </div>
                   </div>
                 ))}
-
-                <button
-                  onClick={() => addCustomActivity('energy')}
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-gray-600 hover:border-green-400 hover:text-green-600 transition-colors flex items-center justify-center gap-2"
-                >
-                  <Plus className="h-5 w-5" />
-                  Add Custom Energy Activity
-                </button>
               </div>
             </div>
 
@@ -353,14 +345,6 @@ export default function SimulatorPage() {
                     </div>
                   </div>
                 ))}
-
-                <button
-                  onClick={() => addCustomActivity('water')}
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-2"
-                >
-                  <Plus className="h-5 w-5" />
-                  Add Custom Water Activity
-                </button>
               </div>
             </div>
 
@@ -419,14 +403,6 @@ export default function SimulatorPage() {
                     </div>
                   </div>
                 ))}
-
-                <button
-                  onClick={() => addCustomActivity('waste')}
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-gray-600 hover:border-orange-400 hover:text-orange-600 transition-colors flex items-center justify-center gap-2"
-                >
-                  <Plus className="h-5 w-5" />
-                  Add Custom Waste Activity
-                </button>
               </div>
             </div>
           </div>

@@ -187,6 +187,23 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
+
+            {/* Basic Calculus */}
+            <div className="group relative">
+              <div className="p-4 rounded-xl border-2 border-purple-200 bg-purple-50 hover:shadow-md transition-all">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center flex-shrink-0">
+                    <Info className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-purple-900 mb-2">Basic Calculus</h3>
+                    <p className="text-sm text-purple-700 leading-relaxed">
+                      Basic Calculus was integrated through the concept of limits. After collecting data on students&apos; waste production, water use, and electricity consumption, limits were applied to analyze long-term trends and behavior as usage increases.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -224,6 +241,10 @@ export default function AboutPage() {
             ⚡ Limitations
           </h2>
           <ul className="space-y-2 text-yellow-700">
+            <li className="flex items-start gap-2">
+              <span>•</span>
+              This is a beta version - features and calculations are still being refined and improved.
+            </li>
             <li className="flex items-start gap-2">
               <span>•</span>
               Cannot provide precise real-time data - relies on estimated calculations and user input.

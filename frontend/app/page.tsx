@@ -112,31 +112,86 @@ export default function Home() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
               <Info className="w-4 h-4" />
-              <span>E-Tech Integration: Survey Data Analysis</span>
+              <span>Statistics and Probability Integration: Survey Data Analysis</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">
-              Survey Insights from Our School
+              Survey Insights: Campus Resource Use
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Real data collected from students about their daily resource consumption and waste habits
+              Based on responses from 79 students and staff, these findings summarize current patterns in energy use, water consumption, and waste generation on campus.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SURVEY_STATS.map((stat) => (
-              <div key={stat.id} className="bg-gray-50 border border-gray-100 rounded-xl p-6 hover:shadow-lg transition-all">
-                <div className="flex items-start gap-4">
-                  <span className="text-3xl">{stat.icon}</span>
-                  <div>
-                    <div className="text-3xl font-bold text-green-600 mb-1">{stat.stat}</div>
-                    <p className="text-sm text-gray-600 mb-3">{stat.description}</p>
-                    <div className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-100 px-2 py-1 rounded-full">
-                      💡 {stat.action}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+          {/* Energy Section */}
+          <div className="mb-8 bg-yellow-50 border border-yellow-200 rounded-2xl p-6">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              ⚡ Energy
+            </h3>
+            <p className="text-gray-700 mb-4 font-medium">
+              Electricity demand is largely driven by air-conditioned classrooms.
+            </p>
+            <ul className="space-y-2 text-gray-600">
+              <li className="flex items-start gap-2">
+                <span className="text-yellow-600 mt-1">•</span>
+                <span><strong>53.2%</strong> spend over 6 hours daily in air-conditioned rooms</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-yellow-600 mt-1">•</span>
+                <span>Estimated average use: <strong>5.4 hours per person per school day</strong></span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-yellow-600 mt-1">•</span>
+                <span>Lights and electronic devices are left on in empty rooms only sometimes or rarely by most respondents</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Water Section */}
+          <div className="mb-8 bg-blue-50 border border-blue-200 rounded-2xl p-6">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              💧 Water
+            </h3>
+            <p className="text-gray-700 mb-4 font-medium">
+              Reusable habits help moderate water consumption.
+            </p>
+            <ul className="space-y-2 text-gray-600">
+              <li className="flex items-start gap-2">
+                <span className="text-blue-600 mt-1">•</span>
+                <span><strong>79.8%</strong> bring reusable water bottles (mostly 600–750 mL)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-600 mt-1">•</span>
+                <span><strong>53.2%</strong> refill 0–1 time per day</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-600 mt-1">•</span>
+                <span>School water is used for washing an average of <strong>3.8 times daily</strong> per person</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Waste Section */}
+          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-6">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              🗑️ Waste
+            </h3>
+            <p className="text-gray-700 mb-4 font-medium">
+              Paper remains the main source of campus waste.
+            </p>
+            <ul className="space-y-2 text-gray-600">
+              <li className="flex items-start gap-2">
+                <span className="text-orange-600 mt-1">•</span>
+                <span><strong>69.6%</strong> identify paper as their most common waste; <strong>21.5%</strong> report plastic</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-orange-600 mt-1">•</span>
+                <span>Average paper use: <strong>3–5 sheets per person per day</strong></span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-orange-600 mt-1">•</span>
+                <span>Plastic use averages <strong>1.9 items daily</strong>; only 32 respondents bring reusables every day</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>

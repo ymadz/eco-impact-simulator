@@ -413,6 +413,22 @@ export default function ChemistryPage() {
             <Beaker className="h-5 w-5 text-cyan-500" />
             Why Volume Matters
           </h2>
+          
+          {/* Concentration Formula */}
+          <div className="bg-cyan-50 p-4 rounded-xl mb-4">
+            <p className="text-center text-2xl font-mono font-bold text-cyan-800 mb-3">
+              Concentration (g/L) = mass of solute (g) ÷ volume of solution (L)
+            </p>
+            <div className="text-sm text-cyan-700 space-y-2">
+              <p>
+                <strong>Solute:</strong> The substance being dissolved (e.g., pollutant, detergent, or chemical).
+              </p>
+              <p>
+                <strong>Solution:</strong> The mixture formed when a solute dissolves in a solvent (e.g., water body).
+              </p>
+            </div>
+          </div>
+          
           <p className="text-gray-600 text-sm mb-4 leading-relaxed">
             The <strong>water body comparison feature</strong> demonstrates a critical environmental principle: 
             the same amount of pollutant creates vastly different concentrations depending on the water volume. 

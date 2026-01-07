@@ -8,6 +8,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/simulator', label: 'Calculator' },
   { href: '/chemistry', label: 'Chemistry' },
+  { href: '/limits', label: 'Limits' },
   { href: '/drrr', label: 'Safety' },
   { href: '/about', label: 'About' },
 ];
