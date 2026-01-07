@@ -12,6 +12,8 @@ export default function ChemistryPage() {
   // %wt Calculator State
   const [massSolute, setMassSolute] = useState(0);
   const [massSolution, setMassSolution] = useState(0);
+  const [massUnit, setMassUnit] = useState<'g' | 'kg' | 'mg'>('g');
+  const [showWhyHow, setShowWhyHow] = useState(false);
   
   // Water Body Comparison State
   const [pollutantType, setPollutantType] = useState('detergent');
@@ -112,18 +114,31 @@ export default function ChemistryPage() {
                 <FlaskConical className="h-5 w-5 text-blue-500" />
                 The Science Behind It
               </h2>
-              <div className="bg-blue-50 p-4 rounded-xl mb-4">
-                <p className="text-center text-2xl font-mono font-bold text-blue-800 mb-2">
-                  %wt = (mass solute ÷ mass solution) × 100
+              
+              {/* Key Definitions */}
+              <div className="bg-purple-50 p-4 rounded-xl mb-4 border border-purple-200">
+                <p className="text-sm text-purple-900 mb-2">
+                  <strong>Solute:</strong> The substance being dissolved (e.g., pollutant, detergent)
                 </p>
-                <p className="text-center text-sm text-blue-600">
-                  Percent by Weight (Weight/Weight Percentage)
+                <p className="text-sm text-purple-900">
+                  <strong>Solution:</strong> Solute + Solvent (the combined mixture)
                 </p>
               </div>
+
+              <div className="bg-blue-50 p-4 rounded-xl mb-4">
+                <p className="text-center text-2xl font-mono font-bold text-blue-800 mb-2">
+                  %wt = (mass of solute ÷ mass of solution) × 100
+                </p>
+                <p className="text-center text-sm text-blue-600 mb-3">
+                  Mass Percent (Percent by Weight)
+                </p>
+                <div className="text-xs text-blue-700 space-y-1">
+                  <p>☆ <strong>mass of solute</strong> = the pollutant mass you add</p>
+                  <p>☆ <strong>mass of solution</strong> = solute + solvent combined!</p>
+                </div>
+              </div>
           <p className="text-gray-600 text-sm">
-            This formula calculates the <strong>percent by weight (%wt)</strong> of a pollutant in a solution. 
-            It shows what fraction of the total solution mass is made up by the solute (pollutant). 
-            The same amount of detergent in a small canal creates a higher %wt concentration than in a large river!
+            Mass percent (%wt) expresses how much of a solution's total mass comes from the solute. It shows what fraction of the total solution mass is made up by the pollutant.
           </p>
         </div>
 
@@ -144,28 +159,36 @@ export default function ChemistryPage() {
                     value={massSolute}
                     onChange={(e) => setMassSolute(Number(e.target.value))}
                     min="0"
+                    step="any"
                     className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 bg-white"
                     placeholder="Enter mass"
                   />
-                  <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                    grams
-                  </span>
+                  <select
+                    value={massUnit}
+                    onChange={(e) => setMassUnit(e.target.value as 'g' | 'kg' | 'mg')}
+                    className="px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                  >
+                    <option value="mg">mg</option>
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
+                  </select>
                 </div>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Mass of Solution (total)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Mass of Solution (solute + solvent)</label>
                 <div className="flex">
                   <input
                     type="number"
                     value={massSolution}
                     onChange={(e) => setMassSolution(Number(e.target.value))}
                     min="0"
+                    step="any"
                     className="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 bg-white"
                     placeholder="Enter mass"
                   />
                   <span className="inline-flex items-center px-4 py-3 border border-l-0 border-gray-300 rounded-r-lg bg-gray-100 text-gray-600 text-sm">
-                    grams
+                    {massUnit}
                   </span>
                 </div>
               </div>
@@ -180,7 +203,7 @@ export default function ChemistryPage() {
                   <div className="inline-block px-4 py-2 bg-blue-100 rounded-lg">
                     <p className="text-sm text-blue-700 font-medium">
                       {massSolute > 0 && massSolution > 0 
-                        ? `${massSolute}g ÷ ${massSolution}g × 100` 
+                        ? `${massSolute}${massUnit} ÷ ${massSolution}${massUnit} × 100` 
                         : 'Enter values to calculate'}
                     </p>
                   </div>
@@ -385,6 +408,153 @@ export default function ChemistryPage() {
             </div>
           </div>
         )}
+
+        {/* Pollution Level Indicator */}
+        <div className="bg-white p-8 rounded-2xl shadow-lg mb-8">
+          <h3 className="font-bold text-gray-800 mb-6 text-xl">Pollution Level Indicator (Based on %wt)</h3>
+          
+          <div className="space-y-4">
+            <div className={`p-4 rounded-xl border-2 transition-all ${
+              Number(calculatePercentWeight()) <= 0.1 && Number(calculatePercentWeight()) > 0
+                ? 'border-green-500 bg-green-50' 
+                : 'border-gray-200 bg-gray-50'
+            }`}>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">🟢</span>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">Safe (≤ 0.1%wt)</h4>
+                  <p className="text-sm text-gray-600">
+                    The pollutant concentration is low and generally considered safe in typical water systems.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className={`p-4 rounded-xl border-2 transition-all ${
+              Number(calculatePercentWeight()) > 0.1 && Number(calculatePercentWeight()) <= 1
+                ? 'border-yellow-500 bg-yellow-50' 
+                : 'border-gray-200 bg-gray-50'
+            }`}>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">🟡</span>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">Moderate (0.1% – 1%wt)</h4>
+                  <p className="text-sm text-gray-600">
+                    The pollutant is noticeable and may begin affecting aquatic life if exposure continues.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className={`p-4 rounded-xl border-2 transition-all ${
+              Number(calculatePercentWeight()) > 1 && Number(calculatePercentWeight()) <= 10
+                ? 'border-orange-500 bg-orange-50' 
+                : 'border-gray-200 bg-gray-50'
+            }`}>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">🟠</span>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">Hazardous (1% – 10%wt)</h4>
+                  <p className="text-sm text-gray-600">
+                    The pollutant concentration is high and potentially harmful to aquatic ecosystems.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className={`p-4 rounded-xl border-2 transition-all ${
+              Number(calculatePercentWeight()) > 10
+                ? 'border-red-600 bg-red-50' 
+                : 'border-gray-200 bg-gray-50'
+            }`}>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">🔴</span>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">Extremely Hazardous (&gt;10%wt)</h4>
+                  <p className="text-sm text-gray-600">
+                    The pollutant concentration is extraordinarily high — far above natural levels — and would likely cause severe environmental damage.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 bg-amber-50 border border-amber-200 p-4 rounded-xl">
+            <h4 className="font-bold text-amber-900 mb-2 flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4" />
+              Important Notes / Disclaimer
+            </h4>
+            <p className="text-sm text-amber-800">
+              The level indicators are just a guide. The actual danger depends on the chemical and the ecosystem. This simulator only shows how concentrated the pollutant is, not whether it&apos;s actually toxic or regulated.
+            </p>
+          </div>
+        </div>
+
+        {/* Why & How Dropdown */}
+        <div className="bg-white p-6 rounded-2xl shadow-lg mb-8">
+          <button
+            onClick={() => setShowWhyHow(!showWhyHow)}
+            className="w-full flex items-center justify-between text-left"
+          >
+            <h3 className="font-bold text-gray-800 text-xl flex items-center gap-2">
+              <Info className="h-5 w-5 text-purple-600" />
+              The Why &amp; How
+            </h3>
+            <span className="text-2xl text-gray-400">{showWhyHow ? '−' : '+'}</span>
+          </button>
+          
+          {showWhyHow && (
+            <div className="mt-6 space-y-6 animate-in fade-in duration-300">
+              {/* Why %wt is appropriate */}
+              <div className="bg-purple-50 p-5 rounded-xl border border-purple-200">
+                <h4 className="font-bold text-purple-900 mb-3">Why %wt is the appropriate concentration formula:</h4>
+                <p className="text-sm text-purple-800 leading-relaxed">
+                  Mass percent is especially useful in chemistry contexts, such as its use in the simulation, because mass percent is independent of temperature or volume, making it robust for computational models where physical conditions may vary or be abstract, and where numeric consistency is key.
+                </p>
+                <a 
+                  href="https://chem.libretexts.org/Bookshelves/General_Chemistry/Book%3A_General_Chemistry_-An_Atoms_First_Approach(Halpern)/Unit_5%3A_States_of_Matter/Chapter_13%3A_Solutions/Chapter_13.3%3A_Units_for_Concentration"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-purple-600 hover:underline mt-2 inline-block"
+                >
+                  Source: Halpern, J. - General Chemistry (LibreTexts)
+                </a>
+              </div>
+
+              {/* Why not other formulas */}
+              <div className="bg-blue-50 p-5 rounded-xl border border-blue-200">
+                <h4 className="font-bold text-blue-900 mb-3">Why not the other concentration formulas?</h4>
+                <p className="text-sm text-blue-800 leading-relaxed">
+                  Molarity (mol/L), which shifts with temperature, volume, and density, can introduce inconsistent concentration values in a simulation that doesn&apos;t hold physical temperature constant. Units like ppm/ppb are used for very low concentrations, but the simulator deals with a broader range of pollutant loads that are meaningfully expressed as a percentage of total solution mass, which makes %wt both interpretable and scientifically valid.
+                </p>
+                <a 
+                  href="https://chem.libretexts.org/Bookshelves/General_Chemistry/Book%3A_General_Chemistry_-An_Atoms_First_Approach(Halpern)/Unit_5%3A_States_of_Matter/Chapter_13%3A_Solutions/Chapter_13.3%3A_Units_for_Concentration"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-600 hover:underline mt-2 inline-block"
+                >
+                  Source: Halpern, J. - General Chemistry (LibreTexts)
+                </a>
+              </div>
+
+              {/* Environmental relevance */}
+              <div className="bg-green-50 p-5 rounded-xl border border-green-200">
+                <h4 className="font-bold text-green-900 mb-3">How is %wt useful/relevant to environmental chemistry?</h4>
+                <p className="text-sm text-green-800 leading-relaxed">
+                  Mass percent is particularly appropriate for environmental chemistry because environmental systems often involve variable temperatures and changing volumes (for example, sunlight warming surface water or mixing with rainwater). By using mass percent rather than volume‑based units like molarity, the simulator ensures that the concentration metric remains consistent and physically meaningful under different environmental conditions.
+                </p>
+                <a 
+                  href="https://openstax.org/books/chemistry/pages/3-4-other-units-for-solution-concentrations"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-green-600 hover:underline mt-2 inline-block"
+                >
+                  Source: OpenStax - Chemistry
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Key Lesson */}
         {massSolute > 0 && massSolution > 0 && (
