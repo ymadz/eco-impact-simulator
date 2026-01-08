@@ -120,6 +120,16 @@ export default function LimitsPage() {
           <p className="text-gray-600 mb-4 leading-relaxed">
             Based on the survey, students spend an average of <strong>5.4 hours per school day</strong> in air-conditioned classrooms.
           </p>
+
+          {/* Energy Use Histogram */}
+          <div className="mb-6 flex flex-col items-center">
+            <img 
+              src="/charts/energy-use-distribution.png" 
+              alt="Energy Use Distribution (AC Classroom Time)" 
+              className="max-w-2xl w-full rounded-lg shadow-md"
+            />
+            <p className="text-sm text-gray-500 text-center mt-2">Energy Use Distribution (AC Classroom Time)</p>
+          </div>
           
           <div className="bg-yellow-50 p-6 rounded-xl mb-4 border border-yellow-200">
             <p className="font-semibold text-gray-800 mb-2">Let:</p>
@@ -168,16 +178,6 @@ export default function LimitsPage() {
               ⚠️ In real life, this shows that energy use keeps increasing as facilities increase.
             </p>
           </div>
-
-          {/* Energy Use Histogram */}
-          <div className="mt-6 flex flex-col items-center">
-            <img 
-              src="/charts/energy-use-distribution.png" 
-              alt="Energy Use Distribution (AC Classroom Time)" 
-              className="max-w-2xl w-full rounded-lg shadow-md"
-            />
-            <p className="text-sm text-gray-500 text-center mt-2">Energy Use Distribution (AC Classroom Time)</p>
-          </div>
         </section>
 
         {/* Water Usage Model */}
@@ -189,6 +189,16 @@ export default function LimitsPage() {
           <p className="text-gray-600 mb-4 leading-relaxed">
             Survey results show that a student uses water about <strong>3.8 times per day</strong> on average.
           </p>
+
+          {/* Water Use Histogram */}
+          <div className="mb-6 flex flex-col items-center">
+            <img 
+              src="/charts/water-use-distribution.png" 
+              alt="Water Use Distribution per School Day" 
+              className="max-w-2xl w-full rounded-lg shadow-md"
+            />
+            <p className="text-sm text-gray-500 text-center mt-2">Water Use Distribution per School Day</p>
+          </div>
           
           <div className="bg-blue-50 p-6 rounded-xl mb-4 border border-blue-200">
             <p className="font-semibold text-gray-800 mb-2">Let:</p>
@@ -237,16 +247,6 @@ export default function LimitsPage() {
               ⚠️ In real life, this shows that total water consumption keeps growing as the student population increases.
             </p>
           </div>
-
-          {/* Water Use Histogram */}
-          <div className="mt-6 flex flex-col items-center">
-            <img 
-              src="/charts/water-use-distribution.png" 
-              alt="Water Use Distribution per School Day" 
-              className="max-w-2xl w-full rounded-lg shadow-md"
-            />
-            <p className="text-sm text-gray-500 text-center mt-2">Water Use Distribution per School Day</p>
-          </div>
         </section>
 
         {/* Waste Generation Model */}
@@ -258,6 +258,16 @@ export default function LimitsPage() {
           <p className="text-gray-600 mb-4 leading-relaxed">
             From the survey, each student generates about <strong>1.9 pieces of waste per day</strong>.
           </p>
+
+          {/* Waste Generation Histogram */}
+          <div className="mb-6 flex flex-col items-center">
+            <img 
+              src="/charts/waste-generation-distribution.png" 
+              alt="Waste Generation Distribution (Plastic Items)" 
+              className="max-w-2xl w-full rounded-lg shadow-md"
+            />
+            <p className="text-sm text-gray-500 text-center mt-2">Waste Generation Distribution (Plastic Items)</p>
+          </div>
           
           <div className="bg-orange-50 p-6 rounded-xl mb-4 border border-orange-200">
             <p className="font-semibold text-gray-800 mb-2">Let:</p>
@@ -302,16 +312,6 @@ export default function LimitsPage() {
             <p className="text-red-800 font-semibold">
               ⚠️ In real life, this means total waste generation keeps growing as the student population increases.
             </p>
-          </div>
-
-          {/* Waste Generation Histogram */}
-          <div className="mt-6 flex flex-col items-center">
-            <img 
-              src="/charts/waste-generation-distribution.png" 
-              alt="Waste Generation Distribution (Plastic Items)" 
-              className="max-w-2xl w-full rounded-lg shadow-md"
-            />
-            <p className="text-sm text-gray-500 text-center mt-2">Waste Generation Distribution (Plastic Items)</p>
           </div>
         </section>
 
