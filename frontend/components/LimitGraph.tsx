@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
   Filler,
+  TooltipItem,
 } from 'chart.js';
 import { ProjectionData } from '@/lib/calculations';
 
@@ -68,11 +69,11 @@ export default function LimitGraph({ data, dailyIncrease }: LimitGraphProps) {
       },
       tooltip: {
         callbacks: {
-          label: function (context: any) {
+          label: function (context: TooltipItem<'line'>) {
             if (context.dataset.label === 'Ecosystem Limit') {
-              return `Limit: ${context.raw.toLocaleString()} kg`;
+              return `Limit: ${(context.raw as number).toLocaleString()} kg`;
             }
-            return `Cumulative: ${context.raw.toLocaleString()} kg`;
+            return `Cumulative: ${(context.raw as number).toLocaleString()} kg`;
           },
         },
       },

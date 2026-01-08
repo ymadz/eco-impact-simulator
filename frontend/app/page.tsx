@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Leaf, Calculator, FlaskConical, ShieldAlert, Info } from 'lucide-react';
-import { SURVEY_STATS } from '@/lib/constants';
+
 
 export default function Home() {
   return (
@@ -20,7 +20,7 @@ export default function Home() {
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60" />
-          
+
           {/* Hero Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4">
             <div className="flex items-center gap-2 mb-4">

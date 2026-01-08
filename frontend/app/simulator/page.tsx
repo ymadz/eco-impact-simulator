@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Zap, Droplets, Trash2, Calculator, Leaf, Info, Lightbulb, ClipboardList, Plus } from 'lucide-react';
+import { RefreshCw, Zap, Droplets, Trash2, Calculator, Leaf, Info, Lightbulb, ClipboardList } from 'lucide-react';
 import { calculateEcoScore } from '@/lib/calculations';
 import { FUN_FACTS } from '@/lib/constants';
 
@@ -38,7 +38,7 @@ const PRESETS = [
 
 export default function SimulatorPage() {
   const [inputMode, setInputMode] = useState<InputMode>('activities');
-  
+
   // Activity tracking state
   const [energyActivities, setEnergyActivities] = useState<Record<string, number>>({
     led: 0, laptop: 0, phone: 0, fan: 0,
@@ -65,7 +65,7 @@ export default function SimulatorPage() {
   const [electricity, setElectricity] = useState(5);
   const [water, setWater] = useState(20);
   const [waste, setWaste] = useState(2);
-  
+
   const [showResults, setShowResults] = useState(false);
   const [currentFunFact, setCurrentFunFact] = useState(FUN_FACTS[0]);
 
@@ -149,20 +149,6 @@ export default function SimulatorPage() {
     setWaste(preset.waste);
   };
 
-  const addCustomActivity = (type: 'energy' | 'water' | 'waste') => {
-    const name = prompt(`Enter custom ${type} activity name:`);
-    if (!name) return;
-
-    const valueStr = prompt(`Enter ${type === 'energy' ? 'kWh' : type === 'water' ? 'liters' : 'kg'} value:`);
-    const value = parseFloat(valueStr || '0');
-    
-    if (value > 0) {
-      setCustomActivities(prev => ({
-        ...prev,
-        [type]: [...prev[type], { name, value }],
-      }));
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-8">
@@ -203,11 +189,10 @@ export default function SimulatorPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <button
               onClick={() => setInputMode('activities')}
-              className={`p-4 rounded-xl border-2 transition-all ${
-                inputMode === 'activities'
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-gray-200 hover:border-green-300'
-              }`}
+              className={`p-4 rounded-xl border-2 transition-all ${inputMode === 'activities'
+                ? 'border-green-500 bg-green-50'
+                : 'border-gray-200 hover:border-green-300'
+                }`}
             >
               <div className="text-3xl mb-2">📋</div>
               <div className="font-bold text-gray-800">Track Activities</div>
@@ -216,11 +201,10 @@ export default function SimulatorPage() {
 
             <button
               onClick={() => setInputMode('manual')}
-              className={`p-4 rounded-xl border-2 transition-all ${
-                inputMode === 'manual'
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-gray-200 hover:border-green-300'
-              }`}
+              className={`p-4 rounded-xl border-2 transition-all ${inputMode === 'manual'
+                ? 'border-green-500 bg-green-50'
+                : 'border-gray-200 hover:border-green-300'
+                }`}
             >
               <div className="text-3xl mb-2">✏️</div>
               <div className="font-bold text-gray-800">Manual Input</div>
@@ -274,7 +258,7 @@ export default function SimulatorPage() {
                     </div>
                   </div>
                 ))}
-                
+
                 {/* Custom Energy Activities */}
                 {customActivities.energy.map((custom, idx) => (
                   <div key={idx} className="border border-green-300 bg-green-50 rounded-lg p-4">
@@ -412,7 +396,7 @@ export default function SimulatorPage() {
         {inputMode === 'manual' && (
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <h3 className="text-xl font-bold text-gray-800 mb-6">Enter Values</h3>
-            
+
             {/* Quick Presets */}
             <div className="mb-8">
               <h4 className="text-sm font-semibold text-gray-700 mb-3">Quick Presets:</h4>
@@ -448,54 +432,54 @@ export default function SimulatorPage() {
             <div className="border-t border-gray-200 pt-6">
               <h4 className="text-sm font-semibold text-gray-700 mb-4">Or Enter Custom Values:</h4>
               <div className="grid gap-6">
-              {/* Electricity Input */}
-              <div>
-                <label className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
-                  <Zap className="h-5 w-5 text-yellow-600" />
-                  Electricity (kWh)
-                </label>
-                <input
-                  type="number"
-                  value={electricity}
-                  onChange={(e) => setElectricity(parseFloat(e.target.value) || 0)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
-                  min="0"
-                  step="0.1"
-                />
-              </div>
+                {/* Electricity Input */}
+                <div>
+                  <label className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
+                    <Zap className="h-5 w-5 text-yellow-600" />
+                    Electricity (kWh)
+                  </label>
+                  <input
+                    type="number"
+                    value={electricity}
+                    onChange={(e) => setElectricity(parseFloat(e.target.value) || 0)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+                    min="0"
+                    step="0.1"
+                  />
+                </div>
 
-              {/* Water Input */}
-              <div>
-                <label className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
-                  <Droplets className="h-5 w-5 text-blue-600" />
-                  Water (Liters)
-                </label>
-                <input
-                  type="number"
-                  value={water}
-                  onChange={(e) => setWater(parseFloat(e.target.value) || 0)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
-                  min="0"
-                  step="0.1"
-                />
-              </div>
+                {/* Water Input */}
+                <div>
+                  <label className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
+                    <Droplets className="h-5 w-5 text-blue-600" />
+                    Water (Liters)
+                  </label>
+                  <input
+                    type="number"
+                    value={water}
+                    onChange={(e) => setWater(parseFloat(e.target.value) || 0)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+                    min="0"
+                    step="0.1"
+                  />
+                </div>
 
-              {/* Waste Input */}
-              <div>
-                <label className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
-                  <Trash2 className="h-5 w-5 text-orange-600" />
-                  Waste (kg)
-                </label>
-                <input
-                  type="number"
-                  value={waste}
-                  onChange={(e) => setWaste(parseFloat(e.target.value) || 0)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
-                  min="0"
-                  step="0.01"
-                />
+                {/* Waste Input */}
+                <div>
+                  <label className="flex items-center gap-2 font-semibold text-gray-800 mb-2">
+                    <Trash2 className="h-5 w-5 text-orange-600" />
+                    Waste (kg)
+                  </label>
+                  <input
+                    type="number"
+                    value={waste}
+                    onChange={(e) => setWaste(parseFloat(e.target.value) || 0)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
               </div>
-            </div>
             </div>
           </div>
         )}
@@ -550,22 +534,20 @@ export default function SimulatorPage() {
                   <Leaf className="h-12 w-12 text-green-600" />
                 </div>
                 <h3 className="text-3xl font-bold text-gray-800 mb-2">Your Eco-Score</h3>
-                <div className={`text-7xl font-bold ${
-                  ecoResult.grade === 'A' ? 'text-green-600' :
+                <div className={`text-7xl font-bold ${ecoResult.grade === 'A' ? 'text-green-600' :
                   ecoResult.grade === 'B' ? 'text-blue-600' :
-                  ecoResult.grade === 'C' ? 'text-yellow-600' :
-                  ecoResult.grade === 'D' ? 'text-orange-600' :
-                  'text-red-600'
-                } mb-2`}>
+                    ecoResult.grade === 'C' ? 'text-yellow-600' :
+                      ecoResult.grade === 'D' ? 'text-orange-600' :
+                        'text-red-600'
+                  } mb-2`}>
                   {ecoResult.score}
                 </div>
-                <div className={`inline-block text-2xl font-bold px-6 py-2 rounded-full ${
-                  ecoResult.grade === 'A' ? 'bg-green-100 text-green-700' :
+                <div className={`inline-block text-2xl font-bold px-6 py-2 rounded-full ${ecoResult.grade === 'A' ? 'bg-green-100 text-green-700' :
                   ecoResult.grade === 'B' ? 'bg-blue-100 text-blue-700' :
-                  ecoResult.grade === 'C' ? 'bg-yellow-100 text-yellow-700' :
-                  ecoResult.grade === 'D' ? 'bg-orange-100 text-orange-700' :
-                  'bg-red-100 text-red-700'
-                }`}>
+                    ecoResult.grade === 'C' ? 'bg-yellow-100 text-yellow-700' :
+                      ecoResult.grade === 'D' ? 'bg-orange-100 text-orange-700' :
+                        'bg-red-100 text-red-700'
+                  }`}>
                   Grade: {ecoResult.grade}
                 </div>
               </div>

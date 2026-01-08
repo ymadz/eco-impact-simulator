@@ -31,6 +31,7 @@ export default function PollutionTank({
       top: Math.random() * 100,
       delay: Math.random() * 2,
     }));
+    // eslint-disable-next-line
     setParticles(newParticles);
   }, []);
   const getSeverityColor = (severity: string) => {

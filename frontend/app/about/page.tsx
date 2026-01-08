@@ -1,38 +1,38 @@
 'use client';
 
-import { Leaf, Target, BookOpen, Users, Code, User, Info } from 'lucide-react';
+import { Leaf, Target, BookOpen, Users, Code, Info } from 'lucide-react';
 import Image from 'next/image';
 
 export default function AboutPage() {
   // Team members data
   const teamMembers = [
-    { 
-      name: 'Ali, Alia', 
+    {
+      name: 'Ali, Alia',
       role: 'Project Lead and Website Concept Developer',
       image: '/team/alia.png'
     },
-    { 
-      name: 'Abing, Maybelle', 
+    {
+      name: 'Abing, Maybelle',
       role: 'Data Interpretation and Content Organization',
       image: '/team/maybelle.png'
     },
-    { 
-      name: 'Maca-alin, Sheena', 
+    {
+      name: 'Maca-alin, Sheena',
       role: 'Survey Development and Content Verification',
       image: '/team/sheena.png'
     },
-    { 
-      name: 'Tabuelog, Hayden', 
+    {
+      name: 'Tabuelog, Hayden',
       role: 'Data Analyst and Project Drafting Lead',
       image: '/team/hayden.png'
     },
-    { 
-      name: 'Ogoc, Jeshua', 
+    {
+      name: 'Ogoc, Jeshua',
       role: 'Lead Mathematical Analyst',
       image: '/team/jeshua.png'
     },
-    { 
-      name: 'Yahya, Maha', 
+    {
+      name: 'Yahya, Maha',
       role: 'Content Writer and Subject Integration Editor',
       image: '/team/maha.png'
     },
@@ -63,13 +63,13 @@ export default function AboutPage() {
             Introduction
           </h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            The Eco-impact Simulator: School Edition turns real-world environmental problems into interactive learning. 
-            Students can explore how waste, energy, and water use affect the environment, while Chemistry calculators 
+            The Eco-impact Simulator: School Edition turns real-world environmental problems into interactive learning.
+            Students can explore how waste, energy, and water use affect the environment, while Chemistry calculators
             show how everyday substances can become harmful over time.
           </p>
           <p className="text-gray-600 leading-relaxed">
-            Thanks to Empowerment Technology (E-Tech), the website lets users track their habits and see their 
-            Eco-Impact Score, a simple number that shows the effect of their consumption. It also includes a DRRR 
+            Thanks to Empowerment Technology (E-Tech), the website lets users track their habits and see their
+            Eco-Impact Score, a simple number that shows the effect of their consumption. It also includes a DRRR
             module to help identify and report hazards easily.
           </p>
         </section>
@@ -83,16 +83,16 @@ export default function AboutPage() {
             <div>
               <h3 className="font-bold text-blue-900 mb-2">Background</h3>
               <p className="text-blue-700 leading-relaxed">
-                Pollution and disaster risks often go unnoticed in schools and communities. E-Tech allows the 
-                simulator to combine Chemistry tools, hazard reporting, and Eco-Impact scoring in one platform. 
+                Pollution and disaster risks often go unnoticed in schools and communities. E-Tech allows the
+                simulator to combine Chemistry tools, hazard reporting, and Eco-Impact scoring in one platform.
                 Users can see how small actions add up to real environmental effects.
               </p>
             </div>
             <div>
               <h3 className="font-bold text-blue-900 mb-2">Problem Statement</h3>
               <p className="text-blue-700 leading-relaxed">
-                Students struggle to connect Chemistry lessons with real-life issues, and hazards often go unreported. 
-                This platform gives a hands-on, tech-powered way to calculate environmental impact, spot risks, and 
+                Students struggle to connect Chemistry lessons with real-life issues, and hazards often go unreported.
+                This platform gives a hands-on, tech-powered way to calculate environmental impact, spot risks, and
                 understand consequences in a clear, visual way.
               </p>
             </div>
@@ -106,9 +106,9 @@ export default function AboutPage() {
             Concept
           </h2>
           <p className="text-gray-600 leading-relaxed">
-            The Eco-Impact Simulator integrates multiple academic subjects into one interactive platform. 
-            Students can calculate their resource consumption, understand chemical pollution through 
-            concentration formulas, and report environmental hazards—all while seeing real-time feedback 
+            The Eco-Impact Simulator integrates multiple academic subjects into one interactive platform.
+            Students can calculate their resource consumption, understand chemical pollution through
+            concentration formulas, and report environmental hazards—all while seeing real-time feedback
             on their ecological footprint.
           </p>
         </section>
@@ -293,8 +293,8 @@ export default function AboutPage() {
             {teamMembers.map((member, index) => (
               <div key={index} className="bg-gray-50 p-6 rounded-xl hover:shadow-md transition-shadow">
                 <div className="w-32 h-32 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center border-4 border-white shadow-lg overflow-hidden">
-                  <Image 
-                    src={member.image} 
+                  <Image
+                    src={member.image}
                     alt={member.name}
                     width={128}
                     height={128}
