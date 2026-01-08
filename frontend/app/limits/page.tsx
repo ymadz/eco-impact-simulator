@@ -170,11 +170,11 @@ export default function LimitsPage() {
           </div>
 
           {/* Energy Use Histogram */}
-          <div className="mt-6">
+          <div className="mt-6 flex flex-col items-center">
             <img 
               src="/charts/energy-use-distribution.png" 
               alt="Energy Use Distribution (AC Classroom Time)" 
-              className="w-full rounded-lg shadow-md"
+              className="max-w-2xl w-full rounded-lg shadow-md"
             />
             <p className="text-sm text-gray-500 text-center mt-2">Energy Use Distribution (AC Classroom Time)</p>
           </div>
@@ -239,11 +239,11 @@ export default function LimitsPage() {
           </div>
 
           {/* Water Use Histogram */}
-          <div className="mt-6">
+          <div className="mt-6 flex flex-col items-center">
             <img 
               src="/charts/water-use-distribution.png" 
               alt="Water Use Distribution per School Day" 
-              className="w-full rounded-lg shadow-md"
+              className="max-w-2xl w-full rounded-lg shadow-md"
             />
             <p className="text-sm text-gray-500 text-center mt-2">Water Use Distribution per School Day</p>
           </div>
@@ -305,11 +305,11 @@ export default function LimitsPage() {
           </div>
 
           {/* Waste Generation Histogram */}
-          <div className="mt-6">
+          <div className="mt-6 flex flex-col items-center">
             <img 
               src="/charts/waste-generation-distribution.png" 
               alt="Waste Generation Distribution (Plastic Items)" 
-              className="w-full rounded-lg shadow-md"
+              className="max-w-2xl w-full rounded-lg shadow-md"
             />
             <p className="text-sm text-gray-500 text-center mt-2">Waste Generation Distribution (Plastic Items)</p>
           </div>
