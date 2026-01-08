@@ -2,6 +2,7 @@
 
 import { TrendingUp, Zap, Droplets, Trash2, Calculator, BookOpen, BarChart3, Info, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function LimitsPage() {
   return (
@@ -167,6 +168,16 @@ export default function LimitsPage() {
               ⚠️ In real life, this shows that energy use keeps increasing as facilities increase.
             </p>
           </div>
+
+          {/* Energy Use Histogram */}
+          <div className="mt-6">
+            <img 
+              src="/charts/energy-use-distribution.png" 
+              alt="Energy Use Distribution (AC Classroom Time)" 
+              className="w-full rounded-lg shadow-md"
+            />
+            <p className="text-sm text-gray-500 text-center mt-2">Energy Use Distribution (AC Classroom Time)</p>
+          </div>
         </section>
 
         {/* Water Usage Model */}
@@ -226,6 +237,16 @@ export default function LimitsPage() {
               ⚠️ In real life, this shows that total water consumption keeps growing as the student population increases.
             </p>
           </div>
+
+          {/* Water Use Histogram */}
+          <div className="mt-6">
+            <img 
+              src="/charts/water-use-distribution.png" 
+              alt="Water Use Distribution per School Day" 
+              className="w-full rounded-lg shadow-md"
+            />
+            <p className="text-sm text-gray-500 text-center mt-2">Water Use Distribution per School Day</p>
+          </div>
         </section>
 
         {/* Waste Generation Model */}
@@ -281,6 +302,16 @@ export default function LimitsPage() {
             <p className="text-red-800 font-semibold">
               ⚠️ In real life, this means total waste generation keeps growing as the student population increases.
             </p>
+          </div>
+
+          {/* Waste Generation Histogram */}
+          <div className="mt-6">
+            <img 
+              src="/charts/waste-generation-distribution.png" 
+              alt="Waste Generation Distribution (Plastic Items)" 
+              className="w-full rounded-lg shadow-md"
+            />
+            <p className="text-sm text-gray-500 text-center mt-2">Waste Generation Distribution (Plastic Items)</p>
           </div>
         </section>
 
