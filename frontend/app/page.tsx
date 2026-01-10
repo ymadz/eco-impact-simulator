@@ -243,30 +243,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 px-4 bg-white border-t border-gray-200">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-green-600 mb-2">85%</div>
-              <p className="text-gray-600 text-sm">Students improved eco-awareness</p>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600 mb-2">1,200+</div>
-              <p className="text-gray-600 text-sm">Simulations completed</p>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600 mb-2">3</div>
-              <p className="text-gray-600 text-sm">Subjects integrated</p>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-green-600 mb-2">∞</div>
-              <p className="text-gray-600 text-sm">Learning possibilities</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-16 px-4 bg-green-600">
         <div className="max-w-4xl mx-auto text-center">
