@@ -66,9 +66,9 @@ export default function HazardForm({ onSubmit }: HazardFormProps) {
     return (
       <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
         <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Report Submitted!</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Demo Report Saved</h2>
         <p className="text-gray-600 mb-6">
-          Thank you for reporting this hazard. School staff will review it shortly.
+          This sample report is saved in this browser only and is not sent to school staff.
         </p>
 
         {selectedHazard && (
