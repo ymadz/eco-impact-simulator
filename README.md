@@ -8,8 +8,6 @@ An interactive educational dashboard for students and school communities to expl
 - **Repository:** [Eco-Impact Simulator on GitHub](https://github.com/ymadz/eco-impact-simulator)
 - **Screenshots:** The verified browser captures are included in the [Screenshots](#screenshots) section below.
 
-![Eco-Impact Simulator home page](frontend/public/screenshots/home.png)
-
 ## Overview
 
 Eco-Impact Simulator: School Edition is a student-focused learning project that turns resource-use scenarios into interactive calculations and visual explanations. Users can model daily electricity, water, and waste use, then explore the result through an eco-score, recommendations, chemistry examples, and calculus-based survey interpretation.
