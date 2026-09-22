@@ -1,128 +1,211 @@
 # Eco-Impact Simulator: School Edition
 
-An interactive, web-based educational dashboard that gamifies school resource consumption. Students can explore hypothetical scenarios involving electricity, water, and waste to understand environmental impacts through live charts, scores, and recommendations.
+An interactive educational dashboard for students and school communities to explore how everyday electricity, water, and waste habits affect environmental impact.
 
-## 🚀 Features
+## Preview
 
-- **Resource Simulator**: Adjust electricity, water, and waste values with real-time eco-scoring
-- **Calculus Limit Projector**: Visualize long-term waste accumulation using mathematical limits
-- **Chemistry Pollution Lab**: Explore concentration and dilution principles
-- **DRRR Safety Center**: Practice hazard identification and learn safety tips
+- **Live demo:** Not deployed yet
+- **Repository:** [Eco-Impact Simulator on GitHub](https://github.com/ymadz/eco-impact-simulator)
+- **Screenshots:** The verified browser captures are included in the [Screenshots](#screenshots) section below.
 
-## 🛠️ Tech Stack
+![Eco-Impact Simulator home page](frontend/public/screenshots/home.png)
 
-- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
-- **Charts**: Chart.js, react-chartjs-2
-- **Icons**: lucide-react
-- **Backend**: Node.js, Express
-- **Database**: Supabase (PostgreSQL)
+## Overview
 
-## 📁 Project Structure
+Eco-Impact Simulator: School Edition is a student-focused learning project that turns resource-use scenarios into interactive calculations and visual explanations. Users can model daily electricity, water, and waste use, then explore the result through an eco-score, recommendations, chemistry examples, and calculus-based survey interpretation.
 
-```
-├── frontend/          # Next.js application
-│   ├── app/          # App router pages
-│   ├── components/   # React components
-│   └── lib/          # Utilities and calculations
-├── backend/          # Express API server
-│   └── src/
-│       ├── routes/   # API endpoints
-│       └── lib/      # Database client
-└── docs/             # Documentation
-```
+The current app is primarily a client-side Next.js experience. The separate Express backend exposes optional hazard and survey-statistics endpoints with a built-in mock-data fallback, while the browser demo stores hazard reports in local storage so it can be demonstrated without a database account.
 
-## 🏃‍♂️ Getting Started
+## Features
+
+- Activity-based and manual resource inputs with presets and real-time eco-score feedback
+- Chemistry pollution lab with percent-by-weight calculations and water-body comparison
+- Limits in Real Life page that connects school survey data, averages, and long-term environmental reasoning
+- DRRR Safety Center with guided hazard reporting, safety tips, and emergency checklists
+- Responsive navigation, educational explanations, recommendations, and locally stored demo reports
+
+## Screenshots
+
+- **Home and learning modules:**
+
+  ![Home page](frontend/public/screenshots/home.png)
+
+- **Resource calculator result:**
+
+  ![Calculator showing an eco-score](frontend/public/screenshots/simulator-result.png)
+
+- **Chemistry pollution calculator:**
+
+  ![Chemistry calculator showing a hazardous 5 percent scenario](frontend/public/screenshots/chemistry-calculator.png)
+
+- **Safety Center hazard-report wizard:**
+
+  ![Safety Center report wizard](frontend/public/screenshots/safety-center.png)
+
+## Tech Stack
+
+### Frontend
+
+- Next.js 16.3.6 with the App Router
+- React 19 and TypeScript
+- Tailwind CSS 4
+- Chart.js and `react-chartjs-2` for the retained projection component
+- `lucide-react` for icons
+- React hooks for local UI state; no external state-management library
+
+### Backend and Data
+
+- Node.js and Express 5 REST API
+- Supabase PostgreSQL integration is optional
+- Mock survey statistics and in-memory hazard data when Supabase is not configured
+- Browser `localStorage` for the current hazard-report demo flow
+- No authentication provider is configured
+
+### Integrations
+
+- Unsplash-hosted forest image used by the home-page hero
+- Original school survey content and histogram assets used by the limits page
+- Optional Supabase tables for `hazard_reports` and `survey_stats`
+- No payment, maps, email/SMS, or external authentication integration
+
+### Tools
+
+- npm with committed `package-lock.json` files
+- ESLint 9 and TypeScript checks
+- Vercel is the recommended frontend deployment platform
+- Webpack is used for the production build command because it is stable in the current local environment
+
+## My Role
+
+I worked on:
+
+- Building the Next.js pages and reusable interactive components
+- Implementing resource, chemistry, and calculus-related calculations
+- Connecting survey concepts to accessible explanations and visual examples
+- Designing the guided hazard-reporting, safety-tip, and checklist flows
+- Preparing the project for local restoration, mock-data demos, and deployment
+
+## What I Learned
+
+- How to structure a multi-page Next.js App Router project
+- How to translate formulas and survey averages into interactive UI feedback
+- How to keep a demo useful when an optional database is unavailable
+- How to separate frontend configuration from server-only Supabase credentials
+- How to verify routes, flows, build output, and browser behavior before deployment
+
+## Challenges
+
+- Making environmental calculations understandable without presenting them as real measurements
+- Keeping the educational modules consistent while each page uses a different interaction pattern
+- Supporting a useful demo without requiring Supabase credentials
+- Restoring an older dependency set while preserving the original UI and behavior
+- Removing a build-time Google Fonts dependency that made production builds depend on an external fetch
+
+## Future Improvements
+
+- Connect the frontend hazard form and survey cards to the Express API
+- Add Supabase schema setup, validation, and row-level security for production persistence
+- Decide whether to wire the retained Chart.js projection component into the limits page or remove unused chart dependencies
+- Replace the remote hero image with an approved local asset for a fully self-contained build
+- Add automated route, accessibility, and calculation tests before accepting real reports
+
+## Installation
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or yarn
-- Supabase account (optional, for persistence)
+- Node.js 20.9 or newer
+- npm 10 or newer is recommended
+- A Supabase project is optional; the app runs in mock/demo mode without it
+- A Vercel account is optional for deployment
 
-### Frontend Setup
+### Setup
 
 ```bash
+git clone https://github.com/ymadz/eco-impact-simulator.git
+cd eco-impact-simulator
 cd frontend
-npm install
-npm run dev
+npm ci
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### Backend Setup
+Create the optional environment files described below, then start the frontend:
 
 ```bash
-cd backend
-cp .env.example .env
-# Edit .env with your Supabase credentials
-npm install
 npm run dev
 ```
 
-The API will run on [http://localhost:5000](http://localhost:5000).
+The app runs at:
 
-### Environment Variables
-
-**Frontend (.env.local)**
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_API_URL=http://localhost:5000
+```text
+http://localhost:3000
 ```
 
-**Backend (.env)**
+To run the optional backend in a second terminal:
+
+```bash
+# Start from the repository root in the second terminal.
+cd backend
+npm ci
+cp .env.example .env
+npm run dev
+```
+
+The API runs at `http://localhost:5000` by default. If that port is already in use, start it with another port, for example `PORT=5001 npm run dev`.
+
+Useful frontend commands:
+
+```bash
+npm run dev          # Start the development server
+npm run build        # Build for production
+npm run start        # Start the production build
+npm run typecheck    # Run TypeScript checks
+npm run lint         # Run ESLint
+```
+
+Useful backend commands:
+
+```bash
+npm run dev          # Start Express with nodemon
+npm start            # Start Express without nodemon
+```
+
+## Environment Variables
+
+The current frontend demo does not require environment variables. The optional Supabase client variables are documented in [`frontend/.env.example`](frontend/.env.example):
+
 ```env
+# frontend/.env.local (optional)
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
+The optional Express backend reads [`backend/.env.example`](backend/.env.example):
+
+```env
+# backend/.env
 PORT=5000
-SUPABASE_URL=your_supabase_url
-SUPABASE_SERVICE_KEY=your_supabase_service_key
+FRONTEND_URL=http://localhost:3000
+SUPABASE_URL=
+SUPABASE_SERVICE_KEY=
 ```
 
-## 📊 Supabase Setup (Optional)
+Leave the Supabase values blank to use the built-in mock data. Never commit `.env`, `.env.local`, service keys, or other secrets.
 
-Create these tables in your Supabase project:
+## Deployment
 
-```sql
--- Hazard Reports
-CREATE TABLE hazard_reports (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  hazard_type VARCHAR(50) NOT NULL,
-  severity VARCHAR(20) NOT NULL,
-  location VARCHAR(100),
-  description TEXT,
-  responses JSONB,
-  status VARCHAR(20) DEFAULT 'pending',
-  created_at TIMESTAMP DEFAULT NOW()
-);
+The frontend can reasonably be deployed today as a portfolio demo. For Vercel, import the repository and set the project **Root Directory** to `frontend`; Vercel can then detect the Next.js app and use its npm scripts. No environment variables are needed for the current client-side demo. The repository-root `vercel.json` is not the frontend app's deployment root.
 
--- Survey Statistics
-CREATE TABLE survey_stats (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  stat_type VARCHAR(50) NOT NULL,
-  value DECIMAL,
-  unit VARCHAR(20),
-  description TEXT,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-```
+The Express backend is optional for the current UI and should be deployed separately to a Node-compatible host if persistent reports or Supabase-backed API responses are needed. Keep `SUPABASE_SERVICE_KEY` server-only and configure `FRONTEND_URL` to the deployed frontend origin.
 
-## 📚 Documentation
+## Project Status
 
-- [Project Overview](docs/PROJECT_OVERVIEW.md)
-- [Planning & Roadmap](docs/PLANNING.md)
+**Portfolio archive / demo-ready.**
 
-## 🎯 Academic Integration
+All six frontend pages build and render locally. The calculator, chemistry lab, limits page, and safety-center demo flow work without external credentials. Sample hazard reports are stored only in the visitor's browser and are not sent to school staff. The backend health, statistics, and hazard endpoints work in mock mode. The backend's `test` script is still an unimplemented placeholder. The project is suitable to deploy as an educational portfolio demo, but it is not a production safety-reporting system and has not been deployed yet.
 
-| Subject | Feature | Concept |
-|---------|---------|---------|
-| E-Tech | Web Interface | UX/UI, JavaScript |
-| Calculus | Limit Projector | Limits (lim x→∞) |
-| Chemistry | Pollution Lab | Concentration (C=n/V) |
-| DRRR | Safety Center | Hazard Identification |
+## Acknowledgements
 
-## 📄 License
-
-This project is for educational purposes.
-
----
-
-Made with ❤️ for a sustainable future
+- [Next.js](https://nextjs.org/), [React](https://react.dev/), and [Vercel](https://vercel.com/)
+- [Tailwind CSS](https://tailwindcss.com/), [Chart.js](https://www.chartjs.org/), and [Lucide](https://lucide.dev/)
+- [Supabase](https://supabase.com/) for the optional PostgreSQL-backed API design
+- [Unsplash](https://unsplash.com/) for the remote forest hero image
+- Original student survey content, histogram images, team assets, and the academic references credited on the limits page
