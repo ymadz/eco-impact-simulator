@@ -166,34 +166,6 @@ npm run dev          # Start Express with nodemon
 npm start            # Start Express without nodemon
 ```
 
-## Environment Variables
-
-The current frontend demo does not require environment variables. The optional Supabase client variables are documented in [`frontend/.env.example`](frontend/.env.example):
-
-```env
-# frontend/.env.local (optional)
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-```
-
-The optional Express backend reads [`backend/.env.example`](backend/.env.example):
-
-```env
-# backend/.env
-PORT=5000
-FRONTEND_URL=http://localhost:3000
-SUPABASE_URL=
-SUPABASE_SERVICE_KEY=
-```
-
-Leave the Supabase values blank to use the built-in mock data. Never commit `.env`, `.env.local`, service keys, or other secrets.
-
-## Deployment
-
-The frontend can reasonably be deployed today as a portfolio demo. For Vercel, import the repository and set the project **Root Directory** to `frontend`; Vercel can then detect the Next.js app and use its npm scripts. No environment variables are needed for the current client-side demo. The repository-root `vercel.json` is not the frontend app's deployment root.
-
-The Express backend is optional for the current UI and should be deployed separately to a Node-compatible host if persistent reports or Supabase-backed API responses are needed. Keep `SUPABASE_SERVICE_KEY` server-only and configure `FRONTEND_URL` to the deployed frontend origin.
-
 ## Project Status
 
 **Portfolio archive / demo-ready.**
